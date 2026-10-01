@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dan Gutierrez</title>
+  <meta name="description" content="Senior Product Manager who ships AI and learning products that make complex work simpler.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fdfdfc;
+      --ink: #111;
+      --muted: #6b6b6b;
+      --body: #444;
+      --line: #dcdcdc;
+      --card-hover: #f5f5f3;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111;
+        --ink: #f2f2f2;
+        --muted: #9a9a9a;
+        --body: #c4c4c4;
+        --line: #2e2e2e;
+        --card-hover: #1a1a1a;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .wrap { max-width: 1240px; margin: 0 auto; padding: 0 44px; }
+
+    /* Nav */
+    nav {
+      display: flex; justify-content: flex-end; align-items: center; gap: 22px;
+      padding-top: 18px; font-size: 18px; color: #555;
+    }
+    nav a:hover { color: var(--ink); }
+    nav .dot { font-size: 12px; color: var(--muted); }
+
+    /* Hero */
+    .hero {
+      display: grid; grid-template-columns: 1fr 384px; gap: 48px;
+      align-items: start; padding: 22px 0 36px;
+      border-bottom: 1px solid var(--line);
+    }
+    h1 {
+      font-size: clamp(56px, 9.5vw, 116px);
+      font-weight: 700; letter-spacing: -0.045em; line-height: 0.95;
+    }
+    .subtitle {
+      margin-top: 18px; font-size: 27px; color: var(--muted); letter-spacing: -0.01em;
+    }
+    .intro { padding-top: 26px; font-size: 17px; line-height: 1.55; color: var(--body); }
+    .intro a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #aaa; }
+    .intro a:hover { color: var(--ink); text-decoration-color: currentColor; }
+    .down { display: block; margin: 22px auto 0; width: 22px; color: var(--body); }
+
+    /* Selected work */
+    .label { margin: 18px 0 14px; font-size: 16px; color: #555; letter-spacing: 0.01em; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card {
+      border: 1px solid var(--line); padding: 18px 20px 16px;
+      display: flex; flex-direction: column; min-height: 144px;
+      transition: background .15s, border-color .15s;
+    }
+    .card:hover { background: var(--card-hover); border-color: #bbb; }
+    .card h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+    .card p { margin-top: 10px; font-size: 15.5px; line-height: 1.5; color: var(--body); max-width: 260px; }
+    .card .arrow { margin-top: auto; padding-top: 10px; }
+
+    .arrow { width: 20px; height: 20px; transition: transform .15s; }
+    a:hover .arrow { transform: translateX(3px); }
+
+    /* Timeline */
+    .timeline { margin: 18px 0 60px; border-top: 1px solid var(--line); }
+    .row {
+      display: grid; grid-template-columns: 185px 118px 1fr 24px; align-items: center;
+      padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15.5px; color: var(--body);
+    }
+    .row:hover { background: var(--card-hover); }
+    .row strong { color: var(--ink); font-weight: 600; font-size: 16px; }
+    .row .sep { margin: 0 6px; color: var(--muted); }
+
+    /* Contact */
+    #contact { padding: 0 0 80px; font-size: 17px; color: var(--body); line-height: 1.6; }
+    #contact a { text-decoration: underline; text-underline-offset: 3px; }
+
+    @media (max-width: 900px) {
+      .wrap { padding: 0 16px; }
+      nav { font-size: 16px; gap: 14px; }
+      .hero { grid-template-columns: 1fr; gap: 8px; }
+      .subtitle { font-size: 21px; }
+      .down { display: none; }
+      .cards { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr 24px; gap: 2px 0; }
+      .row .k, .row .y { grid-column: 1; font-size: 13px; color: var(--muted); }
+      .row .k { display: none; }
+      .row .r { grid-column: 1; }
+      .row .arrow { grid-column: 2; grid-row: 1 / span 2; }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute">
+    <symbol id="arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 10h14M11 4l6 6-6 6"/>
+    </symbol>
+  </svg>
+
+  <div class="wrap">
+    <nav>
+      <a href="#work">Work</a><span class="dot">•</span>
+      <a href="https://github.com/dangutierrez/skills">Library</a><span class="dot">•</span>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <h1>Dan Gutierrez</h1>
+        <p class="subtitle">Senior Product Manager · Austin</p>
+      </div>
+      <div class="intro">
+        <p>Senior Product Manager who ships AI and learning products that make complex work simpler.
+          Led product at <a href="https://www.intellum.com">Intellum</a>, <a href="https://www.clover.com">Clover</a>, and <a href="https://www.accenture.com">Accenture</a>.</p>
+        <a href="#work" aria-label="Scroll to work">
+          <svg class="down" viewBox="0 0 20 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v20M3 15l7 7 7-7"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main id="work">
+      <p class="label">Selected work</p>
+      <section class="cards">
+        <a class="card" href="#">
+          <h3>Intellum AI agents</h3>
+          <p>Improved content discovery and learning outcomes.</p>
+          <svg class="arrow"><use href="#arrow"/></svg>
+        </a>
+        <a class="card" href="#">
+          <h3>Clover Kiosk</h3>
+          <p>Increased in-store engagement and conversion.</p>
+          <svg class="arrow"><use href="#arrow"/></svg>
+        </a>
+        <a class="card" href="#">
+          <h3>Contactless Sport Commerce</h3>
+          <p>Built scalable checkout experiences for fans and venues.</p>
+          <svg class="arrow"><use href="#arrow"/></svg>
+        </a>
+      </section>
+
+      <section class="timeline">
+        <a class="row" href="#"><span class="k">Current</span><span class="y">2023–</span><span class="r"><strong>Intellum</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="row" href="#"><span class="k">Past</span><span class="y">2022–2023</span><span class="r"><strong>Clover</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="row" href="#"><span class="k">Past</span><span class="y">2019–2022</span><span class="r"><strong>Clover Sport</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="row" href="#"><span class="k">Past</span><span class="y">2014–2019</span><span class="r"><strong>Accenture</strong><span class="sep">·</span>Product Lead / PM</span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="row" href="#"><span class="k">Education</span><span class="y">2013</span><span class="r"><strong>Texas A&amp;M</strong><span class="sep">·</span>B.S. Industrial Distribution</span><svg class="arrow"><use href="#arrow"/></svg></a>
+      </section>
+    </main>
+
+    <section id="contact">
+      <p class="label">Contact</p>
+      <p>Find me on <a href="https://github.com/dangutierrez">GitHub</a>.</p>
+    </section>
+  </div>
+</body>
+</html>
