@@ -217,16 +217,21 @@
     [data-theme="twombly"] .row:hover { background: linear-gradient(90deg, rgba(217,141,145,.28), transparent 70%); }
     [data-theme="twombly"] .t-body li::before { background: var(--accent); height: 2px; transform: rotate(-12deg); }
 
-    /* Newman: one cadmium-red field cut by vertical "zips". Anton + Archivo. */
+    /* Newman: one color field cut by vertical "zips". Anton + Archivo.
+       The field alternates between a muted cadmium red (Vir Heroicus Sublimis)
+       and ultramarine (Cathedra) each visit and each click of the swatch. */
     :root[data-theme="newman"] {
-      --bg: #b3141c; --ink: #f8efe4; --body: #f3dcd3; --muted: #eab9ae;
-      --line: rgba(248,239,228,.35); --line-strong: #f8efe4; --card-hover: #9a0f17;
-      --accent: #f8efe4;
+      --bg: #a3312b; --ink: #f8efe4; --body: #f1dcd2; --muted: #e2b8aa;
+      --line: rgba(248,239,228,.35); --line-strong: #f8efe4; --card-hover: #8a2722;
+      --accent: #f8efe4; --zip-dark: #5a1612;
       --f-display: "Anton", Impact, sans-serif; --w-display: 400; --ls-display: 0.005em;
       --f-text: "Archivo", "Helvetica Neue", Arial, sans-serif; --w-text: 400;
       --pattern: linear-gradient(90deg,
         transparent 0 20px, #f8efe4 20px 23px, transparent 23px calc(100% - 34px),
-        #5e0a10 calc(100% - 34px) calc(100% - 20px), transparent 0);
+        var(--zip-dark) calc(100% - 34px) calc(100% - 20px), transparent 0);
+    }
+    :root[data-theme="newman"][data-field="blue"] {
+      --bg: #23408e; --body: #dde3f2; --muted: #aebbe0; --card-hover: #1b3374; --zip-dark: #0f1f4f;
     }
     [data-theme="newman"] .hero { position: relative; }
     [data-theme="newman"] .hero::after {
@@ -238,7 +243,7 @@
     [data-theme="newman"] .card h3, [data-theme="newman"] .fav-h { font-size: 24px; text-transform: uppercase; }
     [data-theme="newman"] .row strong { font-size: 18px; text-transform: uppercase; }
     [data-theme="newman"] .t-role { font-size: 26px; text-transform: uppercase; }
-    [data-theme="newman"] .card { background: rgba(179,20,28,.85); }
+    [data-theme="newman"] .card { background: var(--bg); }
     [data-theme="newman"] .card:hover { background: var(--ink); }
     [data-theme="newman"] .card:hover h3, [data-theme="newman"] .card:hover p, [data-theme="newman"] .card:hover .arrow { color: var(--bg); }
     [data-theme="newman"] .row:hover { background: var(--card-hover); }
@@ -265,7 +270,7 @@
     .swatch[data-set="mondrian"] { --sw: conic-gradient(#d42a20 0 25%, #f4c20d 0 50%, #fff 0 75%, #1d4f9f 0); border-radius: 2px; }
     .swatch[data-set="queens"] { --sw: linear-gradient(135deg, #1b3a2a 55%, #c9a24e 55%); }
     .swatch[data-set="twombly"] { --sw: radial-gradient(circle at 40% 40%, #b3303d 0 35%, #ece6d9 36%); }
-    .swatch[data-set="newman"] { --sw: linear-gradient(90deg, #b3141c 0 58%, #f8efe4 58% 66%, #b3141c 66%); border-radius: 2px; }
+    .swatch[data-set="newman"] { --sw: linear-gradient(90deg, #a3312b 0 46%, #f8efe4 46% 54%, #23408e 54%); border-radius: 2px; }
 
     body, .card, .row, .takeover { transition: background-color .4s, color .4s, border-color .4s; }
 
@@ -292,7 +297,7 @@
 
     @media (max-width: 900px) {
       :root[data-theme="newman"] {
-        --pattern: linear-gradient(90deg, transparent 0 5px, #f8efe4 5px 7px, transparent 7px calc(100% - 9px), #5e0a10 calc(100% - 9px) calc(100% - 3px), transparent 0);
+        --pattern: linear-gradient(90deg, transparent 0 5px, #f8efe4 5px 7px, transparent 7px calc(100% - 9px), var(--zip-dark) calc(100% - 9px) calc(100% - 3px), transparent 0);
       }
       [data-theme="newman"] .hero::after { display: none; }
       .wrap { padding: 0 16px; }
@@ -315,6 +320,11 @@
       let t = 'mondrian';
       try { const saved = localStorage.getItem('colorway'); if (themes.includes(saved)) t = saved; } catch (e) {}
       document.documentElement.dataset.theme = t;
+      // Newman alternates red/blue on every visit
+      let field = 'red';
+      try { field = localStorage.getItem('newmanField') === 'red' ? 'blue' : 'red'; } catch (e) {}
+      document.documentElement.dataset.field = field;
+      if (t === 'newman') try { localStorage.setItem('newmanField', field); } catch (e) {}
     })();
   </script>
 </head>
@@ -614,7 +624,15 @@
       swatches.forEach(b => b.setAttribute('aria-pressed', b.dataset.set === t));
       try { localStorage.setItem('colorway', t); } catch (e) {}
     }
-    swatches.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.set)));
+    swatches.forEach(b => b.addEventListener('click', () => {
+      const root = document.documentElement;
+      // clicking Newman while it's showing flips the field red <-> blue
+      if (b.dataset.set === 'newman' && root.dataset.theme === 'newman') {
+        root.dataset.field = root.dataset.field === 'red' ? 'blue' : 'red';
+        try { localStorage.setItem('newmanField', root.dataset.field); } catch (e) {}
+      }
+      setTheme(b.dataset.set);
+    }));
     setTheme(document.documentElement.dataset.theme);
 
     const el = document.getElementById('takeover');
