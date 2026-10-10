@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="mondrian">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,31 +7,18 @@
   <meta name="description" content="Product leader with 12 years building 0→1 products across AI, fintech/POS, and B2B SaaS.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&family=Libre+Caslon+Display&family=Hanken+Grotesk:wght@400&family=Caveat:wght@600&family=Anton&family=Archivo:wght@400&display=swap" rel="stylesheet">
   <style>
+    /* Base tokens = Mondrian (the default colorway). Each colorway uses
+       exactly two font styles: --f-display/--w-display and --f-text/--w-text. */
     :root {
-      --bg: #fdfdfc;
-      --ink: #111;
-      --muted: #6b6b6b;
-      --body: #444;
-      --line: #dcdcdc;
-      --line-strong: #bbb;
-      --card-hover: #f5f5f3;
-      --accent: #111;
-      --display: "Inter", "Helvetica Neue", Arial, sans-serif;
-      --rule: 1px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root[data-theme="mono"] {
-        --line-strong: #555;
-        --accent: #f2f2f2;
-        --bg: #111;
-        --ink: #f2f2f2;
-        --muted: #9a9a9a;
-        --body: #c4c4c4;
-        --line: #2e2e2e;
-        --card-hover: #1a1a1a;
-      }
+      --bg: #f7f4ec; --ink: #111; --body: #222; --muted: #5a5a5a;
+      --line: #111; --line-strong: #111; --card-hover: #fff;
+      --red: #d42a20; --blue: #1d4f9f; --yellow: #f4c20d;
+      --accent: var(--red);
+      --f-display: "Inter", "Helvetica Neue", Arial, sans-serif; --w-display: 800; --ls-display: -0.045em;
+      --f-text: "Inter", "Helvetica Neue", Arial, sans-serif; --w-text: 400;
+      --pattern: none;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,7 +26,8 @@
     body {
       background: var(--bg);
       color: var(--ink);
-      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      background-image: var(--pattern); background-attachment: fixed;
+      font-family: var(--f-text); font-weight: var(--w-text);
       -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; text-decoration: none; }
@@ -60,10 +48,14 @@
       align-items: start; padding: 22px 0 36px;
       border-bottom: 1px solid var(--line);
     }
-    h1, .t-head h2 { font-family: var(--display); }
+    /* Display style: every heading-like element. Everything else is text style. */
+    h1, .t-head h2, .card h3, .row strong, .fav h3, .t-role {
+      font-family: var(--f-display); font-weight: var(--w-display); letter-spacing: var(--ls-display);
+    }
+    .card h3, .row strong, .fav h3 { letter-spacing: normal; }
     h1 {
       font-size: clamp(56px, 9.5vw, 116px);
-      font-weight: 700; letter-spacing: -0.045em; line-height: 0.95;
+      line-height: 0.95;
     }
     .subtitle {
       margin-top: 18px; font-size: 27px; color: var(--muted); letter-spacing: -0.01em;
@@ -82,9 +74,10 @@
       transition: background .15s, border-color .15s;
     }
     .card:hover { background: var(--card-hover); border-color: var(--line-strong); }
-    .card h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+    .card h3 { font-size: 20px; }
     .card p { margin-top: 10px; font-size: 15.5px; line-height: 1.5; color: var(--body); max-width: 260px; }
-    .card .arrow { margin-top: auto; padding-top: 10px; }
+    .card .arrow { margin-top: auto; flex: none; }
+    .card p { margin-bottom: 12px; }
 
     .arrow { width: 20px; height: 20px; transition: transform .15s; }
     a:hover .arrow { transform: translateX(3px); }
@@ -96,8 +89,10 @@
       padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15.5px; color: var(--body);
     }
     .row:hover { background: var(--card-hover); }
-    .row strong { color: var(--ink); font-weight: 600; font-size: 16px; }
+    .row strong { color: var(--ink); font-size: 16px; }
     .row .sep { margin: 0 6px; color: var(--muted); }
+
+    .fav-h { font-size: 20px; margin-bottom: 16px; color: var(--ink); }
 
     /* Contact */
     #contact { padding: 0 0 80px; font-size: 17px; color: var(--body); line-height: 1.6; }
@@ -107,7 +102,7 @@
     body.locked { overflow: hidden; }
     .takeover {
       position: fixed; inset: 0; z-index: 10; overflow-y: auto;
-      background: var(--bg); visibility: hidden;
+      background: var(--bg); background-image: var(--pattern); visibility: hidden;
       clip-path: inset(var(--t, 0) var(--r, 0) var(--b, 0) var(--l, 0));
     }
     .takeover.open { visibility: visible; }
@@ -129,8 +124,8 @@
       display: grid; grid-template-columns: 1fr 384px; gap: 48px; align-items: end;
       padding: 48px 0 36px; border-bottom: 1px solid var(--line);
     }
-    .t-head h2 { font-size: clamp(44px, 7vw, 92px); font-weight: 700; letter-spacing: -0.04em; line-height: 0.95; }
-    .t-role { margin-top: 16px; font-size: 24px; color: var(--muted); letter-spacing: -0.01em; }
+    .t-head h2 { font-size: clamp(44px, 7vw, 92px); line-height: 0.95; }
+    .t-role { margin-top: 16px; font-size: 24px; color: var(--muted); letter-spacing: normal; }
     .t-summary { font-size: 17px; line-height: 1.55; color: var(--body); }
     .t-hero { max-width: 1240px; margin: 0 auto; padding: 28px 44px 0; }
     .t-video { max-width: 1240px; margin: 0 auto; padding: 28px 44px 0; }
@@ -156,13 +151,7 @@
 
     /* ---------- Colorways ---------- */
 
-    /* Mondrian: primary blocks, heavy black grid lines */
-    :root[data-theme="mondrian"] {
-      --bg: #f7f4ec; --ink: #111; --body: #222; --muted: #5a5a5a;
-      --line: #111; --line-strong: #111; --card-hover: #fff;
-      --red: #d42a20; --blue: #1d4f9f; --yellow: #f4c20d;
-      --accent: var(--red); --rule: 4px;
-    }
+    /* Mondrian (default): primary blocks, heavy black grid lines. Inter Black + Inter. */
     [data-theme="mondrian"] .hero { border-bottom-width: 6px; }
     [data-theme="mondrian"] .card { border-width: 4px; position: relative; padding-top: 30px; }
     [data-theme="mondrian"] .card::before {
@@ -173,13 +162,12 @@
     [data-theme="mondrian"] .card:nth-child(2) { --block: var(--blue); }
     [data-theme="mondrian"] .card:nth-child(3) { --block: var(--yellow); }
     [data-theme="mondrian"] .card:hover { background: var(--block); border-color: #111; }
+    [data-theme="mondrian"] .card:hover p { color: #111; }
     [data-theme="mondrian"] .card:nth-child(-n+2):hover,
     [data-theme="mondrian"] .card:nth-child(-n+2):hover p { color: #fff; }
-    [data-theme="mondrian"] .card:hover p { color: #111; }
     [data-theme="mondrian"] .timeline { border-top-width: 4px; }
     [data-theme="mondrian"] .row { border-bottom-width: 2px; }
     [data-theme="mondrian"] .row:hover { background: var(--yellow); }
-    [data-theme="mondrian"] h1 { font-weight: 800; }
     [data-theme="mondrian"] .t-top { border-bottom: 10px solid; border-image: linear-gradient(90deg, var(--red) 0 45%, #111 45% 46%, var(--yellow) 46% 70%, #111 70% 71%, var(--blue) 71%) 1; padding-bottom: 14px; }
     [data-theme="mondrian"] .t-head { border-bottom-width: 4px; }
     [data-theme="mondrian"] .t-body li { border-bottom-width: 2px; }
@@ -187,43 +175,74 @@
     [data-theme="mondrian"] .t-body li:nth-child(3n+2)::before { background: var(--blue); }
     [data-theme="mondrian"] .t-body li:nth-child(3n)::before { background: var(--yellow); }
 
-    /* Queens: cream, forest green, burgundy, old-world serif */
+    /* Queens (after Aimé Leon Dore): deep forest green, cream, gold.
+       Caslon serif (like the wordmark) + grotesque sans (like their Söhne). */
     :root[data-theme="queens"] {
-      --bg: #f1ece1; --ink: #1d3a2b; --body: #3c4a40; --muted: #857c69;
-      --line: #d3c9b5; --line-strong: #1d3a2b; --card-hover: #e8e0cf;
-      --accent: #6c1f2a;
-      --display: "Cormorant Garamond", Georgia, serif;
+      --bg: #1b3a2a; --ink: #f3ecdc; --body: #dcd3bf; --muted: #a9b5a0;
+      --line: #3f5c4a; --line-strong: #f3ecdc; --card-hover: #234a36;
+      --accent: #c9a24e;
+      --f-display: "Libre Caslon Display", Georgia, serif; --w-display: 400; --ls-display: -0.01em;
+      --f-text: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif; --w-text: 400;
     }
-    [data-theme="queens"] h1 { font-weight: 600; letter-spacing: -0.02em; }
-    [data-theme="queens"] .subtitle { font-family: var(--display); font-style: italic; font-size: 30px; color: var(--accent); }
-    [data-theme="queens"] .label, [data-theme="queens"] nav { text-transform: uppercase; letter-spacing: 0.14em; font-size: 13px; }
-    [data-theme="queens"] .card h3, [data-theme="queens"] .row strong, [data-theme="queens"] #favorites h3 { font-family: var(--display); font-size: 25px; font-weight: 600; letter-spacing: 0; }
-    [data-theme="queens"] .row strong { font-size: 20px; }
+    [data-theme="queens"] .label, [data-theme="queens"] nav, [data-theme="queens"] .subtitle,
+    [data-theme="queens"] .row .k, [data-theme="queens"] .t-top, [data-theme="queens"] .t-meta dt {
+      text-transform: uppercase; letter-spacing: 0.16em; font-size: 12.5px;
+    }
+    [data-theme="queens"] .subtitle { font-size: 15px; color: var(--accent); margin-top: 22px; }
+    [data-theme="queens"] .card h3, [data-theme="queens"] .fav-h { font-size: 27px; }
+    [data-theme="queens"] .row strong { font-size: 21px; }
     [data-theme="queens"] .card { border-color: var(--ink); outline: 1px solid var(--ink); outline-offset: -6px; padding: 22px 24px 18px; }
-    [data-theme="queens"] .card:hover { background: var(--ink); }
+    [data-theme="queens"] .card:hover { background: var(--ink); outline-color: var(--bg); }
     [data-theme="queens"] .card:hover h3, [data-theme="queens"] .card:hover p, [data-theme="queens"] .card:hover .arrow { color: var(--bg); }
-    [data-theme="queens"] .card:hover { outline-color: var(--bg); }
     [data-theme="queens"] .intro a { text-decoration-color: var(--accent); }
-    [data-theme="queens"] .t-head h2 { font-weight: 600; letter-spacing: -0.02em; }
-    [data-theme="queens"] .t-role { font-family: var(--display); font-style: italic; color: var(--accent); }
-    [data-theme="queens"] .t-body li::before { content: "\2766"; background: none; width: auto; height: auto; top: 16px; left: 0; color: var(--accent); font-size: 15px; }
+    [data-theme="queens"] .t-role { color: var(--accent); font-size: 28px; }
+    [data-theme="queens"] .t-body li::before { content: "\2766"; background: none; width: auto; height: auto; top: 15px; left: 0; color: var(--accent); font-size: 15px; }
 
-    /* Twombly: raw canvas, graphite, crimson scrawl */
+    /* Twombly: raw canvas, graphite, crimson scrawl. Caveat hand + Inter. */
     :root[data-theme="twombly"] {
       --bg: #ece6d9; --ink: #2a2826; --body: #4a4641; --muted: #8b8478;
       --line: #cfc6b5; --line-strong: #8b8478; --card-hover: #e4dccb;
-      --accent: #b3303d; --rose: #d98d91;
-      --hand: "Caveat", cursive;
+      --accent: #b3303d;
+      --f-display: "Caveat", cursive; --w-display: 600; --ls-display: 0;
     }
-    [data-theme="twombly"] h1 { font-weight: 600; letter-spacing: -0.035em; }
-    [data-theme="twombly"] .label { font-family: var(--hand); font-size: 26px; color: var(--accent); transform: rotate(-1.5deg); transform-origin: left; }
-    [data-theme="twombly"] .subtitle { font-family: var(--hand); font-size: 34px; color: var(--body); }
+    [data-theme="twombly"] h1 { font-size: clamp(64px, 11vw, 132px); line-height: 0.85; }
+    [data-theme="twombly"] .t-head h2 { font-size: clamp(54px, 8vw, 104px); }
+    [data-theme="twombly"] .card h3, [data-theme="twombly"] .fav-h { font-size: 28px; }
+    [data-theme="twombly"] .row strong { font-size: 22px; }
+    [data-theme="twombly"] .t-role { font-size: 32px; color: var(--accent); }
+    [data-theme="twombly"] .label { color: var(--accent); }
     [data-theme="twombly"] .card { border-style: dashed; border-color: var(--line-strong); }
     [data-theme="twombly"] .card:hover { background: radial-gradient(120% 90% at 15% 20%, rgba(217,141,145,.45), transparent 60%), var(--card-hover); }
     [data-theme="twombly"] .card .arrow, [data-theme="twombly"] .row:hover .arrow { color: var(--accent); }
     [data-theme="twombly"] .row:hover { background: linear-gradient(90deg, rgba(217,141,145,.28), transparent 70%); }
-    [data-theme="twombly"] .t-role { font-family: var(--hand); font-size: 32px; color: var(--accent); }
     [data-theme="twombly"] .t-body li::before { background: var(--accent); height: 2px; transform: rotate(-12deg); }
+
+    /* Newman: one cadmium-red field cut by vertical "zips". Anton + Archivo. */
+    :root[data-theme="newman"] {
+      --bg: #b3141c; --ink: #f8efe4; --body: #f3dcd3; --muted: #eab9ae;
+      --line: rgba(248,239,228,.35); --line-strong: #f8efe4; --card-hover: #9a0f17;
+      --accent: #f8efe4;
+      --f-display: "Anton", Impact, sans-serif; --w-display: 400; --ls-display: 0.005em;
+      --f-text: "Archivo", "Helvetica Neue", Arial, sans-serif; --w-text: 400;
+      --pattern: linear-gradient(90deg,
+        transparent 0 20px, #f8efe4 20px 23px, transparent 23px calc(100% - 34px),
+        #5e0a10 calc(100% - 34px) calc(100% - 20px), transparent 0);
+    }
+    [data-theme="newman"] .hero { position: relative; }
+    [data-theme="newman"] .hero::after {
+      content: ""; position: absolute; top: -200px; bottom: 0; right: calc(384px + 22px);
+      width: 4px; background: #e3a84a; pointer-events: none;
+    }
+    [data-theme="newman"] h1, [data-theme="newman"] .t-head h2 { text-transform: uppercase; line-height: 0.92; }
+    [data-theme="newman"] h1 { font-size: clamp(64px, 11vw, 140px); }
+    [data-theme="newman"] .card h3, [data-theme="newman"] .fav-h { font-size: 24px; text-transform: uppercase; }
+    [data-theme="newman"] .row strong { font-size: 18px; text-transform: uppercase; }
+    [data-theme="newman"] .t-role { font-size: 26px; text-transform: uppercase; }
+    [data-theme="newman"] .card { background: rgba(179,20,28,.85); }
+    [data-theme="newman"] .card:hover { background: var(--ink); }
+    [data-theme="newman"] .card:hover h3, [data-theme="newman"] .card:hover p, [data-theme="newman"] .card:hover .arrow { color: var(--bg); }
+    [data-theme="newman"] .row:hover { background: var(--card-hover); }
+    [data-theme="newman"] .t-body li::before { width: 3px; height: 22px; top: 18px; left: 6px; background: var(--ink); }
 
     /* Decorative art, one per theme */
     .art { display: none; }
@@ -243,10 +262,10 @@
     }
     .swatch:hover { transform: scale(1.15); }
     .swatch[aria-pressed="true"] { outline: 1.5px solid var(--ink); }
-    .swatch[data-set="mono"] { --sw: linear-gradient(135deg, #fdfdfc 50%, #111 50%); }
     .swatch[data-set="mondrian"] { --sw: conic-gradient(#d42a20 0 25%, #f4c20d 0 50%, #fff 0 75%, #1d4f9f 0); border-radius: 2px; }
-    .swatch[data-set="queens"] { --sw: linear-gradient(135deg, #1d3a2b 50%, #6c1f2a 50%); }
+    .swatch[data-set="queens"] { --sw: linear-gradient(135deg, #1b3a2a 55%, #c9a24e 55%); }
     .swatch[data-set="twombly"] { --sw: radial-gradient(circle at 40% 40%, #b3303d 0 35%, #ece6d9 36%); }
+    .swatch[data-set="newman"] { --sw: linear-gradient(90deg, #b3141c 0 58%, #f8efe4 58% 66%, #b3141c 66%); border-radius: 2px; }
 
     body, .card, .row, .takeover { transition: background-color .4s, color .4s, border-color .4s; }
 
@@ -272,6 +291,10 @@
     }
 
     @media (max-width: 900px) {
+      :root[data-theme="newman"] {
+        --pattern: linear-gradient(90deg, transparent 0 5px, #f8efe4 5px 7px, transparent 7px calc(100% - 9px), #5e0a10 calc(100% - 9px) calc(100% - 3px), transparent 0);
+      }
+      [data-theme="newman"] .hero::after { display: none; }
       .wrap { padding: 0 16px; }
       nav { font-size: 16px; gap: 14px; }
       .hero { grid-template-columns: 1fr; gap: 8px; }
@@ -288,8 +311,9 @@
   </style>
   <script>
     (function () {
-      let t = 'mono';
-      try { t = localStorage.getItem('colorway') || t; } catch (e) {}
+      const themes = ['mondrian', 'queens', 'twombly', 'newman'];
+      let t = 'mondrian';
+      try { const saved = localStorage.getItem('colorway'); if (themes.includes(saved)) t = saved; } catch (e) {}
       document.documentElement.dataset.theme = t;
     })();
   </script>
@@ -308,10 +332,10 @@
       <a href="https://github.com/dangutierrez/skills">Library</a><span class="dot">•</span>
       <a href="#contact">Contact</a>
       <div class="swatches" role="group" aria-label="Colorway">
-        <button class="swatch" data-set="mono" aria-label="Mono colorway" title="Mono"></button>
         <button class="swatch" data-set="mondrian" aria-label="Mondrian colorway" title="Mondrian"></button>
         <button class="swatch" data-set="queens" aria-label="Queens colorway" title="Queens"></button>
         <button class="swatch" data-set="twombly" aria-label="Twombly colorway" title="Twombly"></button>
+        <button class="swatch" data-set="newman" aria-label="Newman colorway" title="Newman"></button>
       </div>
     </nav>
 
@@ -373,11 +397,11 @@
       </section>
     </main>
 
-    <section id="favorites" style="padding: 60px 0 80px; border-top: 1px solid var(--line);">
+    <section id="favorites" class="fav" style="padding: 60px 0 80px; border-top: 1px solid var(--line);">
       <p class="label">Favorites</p>
 
       <div style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--ink);">Books</h3>
+        <h3 class="fav-h">Books</h3>
         <ul style="list-style: none; font-size: 16px; line-height: 1.7; color: var(--body);">
           <li>Blood Meridian — Cormac McCarthy</li>
           <li>Hitchhiker's Guide to the Galaxy — Douglas Adams</li>
@@ -396,7 +420,7 @@
       </div>
 
       <div style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--ink);">Movies <span style="font-weight: 400; font-size: 15px; color: var(--muted);">· <a href="https://letterboxd.com/dan_e_gee/list/favorite-all-time/" style="text-decoration: underline;">View on Letterboxd</a></span></h3>
+        <h3 class="fav-h">Movies <span style="font-family: var(--f-text); font-weight: var(--w-text); font-size: 15px; color: var(--muted); text-transform: none; letter-spacing: normal;">· <a href="https://letterboxd.com/dan_e_gee/list/favorite-all-time/" style="text-decoration: underline;">View on Letterboxd</a></span></h3>
         <ul style="list-style: none; font-size: 16px; line-height: 1.7; color: var(--body); columns: 2; column-gap: 40px;">
           <li>28 Days Later</li>
           <li>2001: A Space Odyssey</li>
@@ -427,7 +451,7 @@
       </div>
 
       <div>
-        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--ink);">Music <span style="font-weight: 400; font-size: 15px; color: var(--muted);">· Track of the Week 2026</span></h3>
+        <h3 class="fav-h">Music <span style="font-family: var(--f-text); font-weight: var(--w-text); font-size: 15px; color: var(--muted); text-transform: none; letter-spacing: normal;">· Track of the Week 2026</span></h3>
         <iframe style="border-radius: 12px; margin-top: 12px;" src="https://open.spotify.com/embed/playlist/3GfmnPVWLR9hiD0lcztP1B?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
       </div>
     </section>
