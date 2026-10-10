@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dan Gutierrez</title>
-  <meta name="description" content="Senior Product Manager who ships AI and learning products that make complex work simpler.">
+  <meta name="description" content="Product leader with 12 years building 0→1 products across AI, fintech/POS, and B2B SaaS.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #fdfdfc;
@@ -15,10 +15,16 @@
       --muted: #6b6b6b;
       --body: #444;
       --line: #dcdcdc;
+      --line-strong: #bbb;
       --card-hover: #f5f5f3;
+      --accent: #111;
+      --display: "Inter", "Helvetica Neue", Arial, sans-serif;
+      --rule: 1px;
     }
     @media (prefers-color-scheme: dark) {
-      :root {
+      :root[data-theme="mono"] {
+        --line-strong: #555;
+        --accent: #f2f2f2;
         --bg: #111;
         --ink: #f2f2f2;
         --muted: #9a9a9a;
@@ -43,7 +49,7 @@
     /* Nav */
     nav {
       display: flex; justify-content: flex-end; align-items: center; gap: 22px;
-      padding-top: 18px; font-size: 18px; color: #555;
+      padding-top: 18px; font-size: 18px; color: var(--muted); flex-wrap: wrap;
     }
     nav a:hover { color: var(--ink); }
     nav .dot { font-size: 12px; color: var(--muted); }
@@ -54,6 +60,7 @@
       align-items: start; padding: 22px 0 36px;
       border-bottom: 1px solid var(--line);
     }
+    h1, .t-head h2 { font-family: var(--display); }
     h1 {
       font-size: clamp(56px, 9.5vw, 116px);
       font-weight: 700; letter-spacing: -0.045em; line-height: 0.95;
@@ -62,19 +69,19 @@
       margin-top: 18px; font-size: 27px; color: var(--muted); letter-spacing: -0.01em;
     }
     .intro { padding-top: 26px; font-size: 17px; line-height: 1.55; color: var(--body); }
-    .intro a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #aaa; }
+    .intro a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-strong); }
     .intro a:hover { color: var(--ink); text-decoration-color: currentColor; }
     .down { display: block; margin: 22px auto 0; width: 22px; color: var(--body); }
 
     /* Selected work */
-    .label { margin: 18px 0 14px; font-size: 16px; color: #555; letter-spacing: 0.01em; }
+    .label { margin: 18px 0 14px; font-size: 16px; color: var(--muted); letter-spacing: 0.01em; }
     .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .card {
       border: 1px solid var(--line); padding: 18px 20px 16px;
       display: flex; flex-direction: column; min-height: 144px;
       transition: background .15s, border-color .15s;
     }
-    .card:hover { background: var(--card-hover); border-color: #bbb; }
+    .card:hover { background: var(--card-hover); border-color: var(--line-strong); }
     .card h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
     .card p { margin-top: 10px; font-size: 15.5px; line-height: 1.5; color: var(--body); max-width: 260px; }
     .card .arrow { margin-top: auto; padding-top: 10px; }
@@ -96,6 +103,174 @@
     #contact { padding: 0 0 80px; font-size: 17px; color: var(--body); line-height: 1.6; }
     #contact a { text-decoration: underline; text-underline-offset: 3px; }
 
+    /* Takeover */
+    body.locked { overflow: hidden; }
+    .takeover {
+      position: fixed; inset: 0; z-index: 10; overflow-y: auto;
+      background: var(--bg); visibility: hidden;
+      clip-path: inset(var(--t, 0) var(--r, 0) var(--b, 0) var(--l, 0));
+    }
+    .takeover.open { visibility: visible; }
+    .takeover.animating { transition: clip-path .55s cubic-bezier(.7, 0, .2, 1); }
+    .takeover .inner {
+      max-width: 1240px; margin: 0 auto; padding: 18px 44px 80px;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity .3s ease, transform .4s cubic-bezier(.2, 0, .2, 1);
+    }
+    .takeover.shown .inner { opacity: 1; transform: none; transition-delay: .25s; }
+    .t-top { display: flex; justify-content: space-between; align-items: center; font-size: 16px; color: var(--muted); }
+    .t-close {
+      background: none; border: 0; cursor: pointer; color: var(--ink);
+      font: inherit; font-size: 18px; display: flex; align-items: center; gap: 8px;
+    }
+    .t-close svg { width: 18px; height: 18px; }
+    .t-close:hover { color: var(--muted); }
+    .t-head {
+      display: grid; grid-template-columns: 1fr 384px; gap: 48px; align-items: end;
+      padding: 48px 0 36px; border-bottom: 1px solid var(--line);
+    }
+    .t-head h2 { font-size: clamp(44px, 7vw, 92px); font-weight: 700; letter-spacing: -0.04em; line-height: 0.95; }
+    .t-role { margin-top: 16px; font-size: 24px; color: var(--muted); letter-spacing: -0.01em; }
+    .t-summary { font-size: 17px; line-height: 1.55; color: var(--body); }
+    .t-hero { max-width: 1240px; margin: 0 auto; padding: 28px 44px 0; }
+    .t-video { max-width: 1240px; margin: 0 auto; padding: 28px 44px 0; }
+    .t-body { display: grid; grid-template-columns: 1fr 384px; gap: 48px; padding-top: 28px; }
+    .t-body ul { list-style: none; }
+    .t-body li {
+      position: relative; padding: 16px 0 16px 28px; border-bottom: 1px solid var(--line);
+      font-size: 18px; line-height: 1.5; color: var(--ink);
+      opacity: 0; transform: translateY(10px); transition: opacity .35s, transform .45s cubic-bezier(.2, 0, .2, 1);
+    }
+    .t-body li::before { content: ""; position: absolute; left: 4px; top: 27px; width: 8px; height: 1.5px; background: var(--ink); }
+    .takeover.shown .t-body li { opacity: 1; transform: none; }
+    .t-meta dt { font-size: 14px; color: var(--muted); margin-top: 16px; }
+    .t-meta dt:first-child { margin-top: 0; }
+    .t-meta dd { font-size: 16px; color: var(--ink); margin-top: 4px; }
+    .t-nav { display: flex; justify-content: space-between; margin-top: 48px; font-size: 16px; color: var(--muted); }
+    .t-nav a { display: flex; align-items: center; gap: 10px; }
+    .t-nav a:hover { color: var(--ink); }
+    .t-nav .flip { transform: rotate(180deg); }
+    .t-nav a.prev:hover .arrow { transform: rotate(180deg) translateX(3px); }
+    .t-draft { margin-top: 18px; font-size: 13px; color: var(--muted); }
+
+
+    /* ---------- Colorways ---------- */
+
+    /* Mondrian: primary blocks, heavy black grid lines */
+    :root[data-theme="mondrian"] {
+      --bg: #f7f4ec; --ink: #111; --body: #222; --muted: #5a5a5a;
+      --line: #111; --line-strong: #111; --card-hover: #fff;
+      --red: #d42a20; --blue: #1d4f9f; --yellow: #f4c20d;
+      --accent: var(--red); --rule: 4px;
+    }
+    [data-theme="mondrian"] .hero { border-bottom-width: 6px; }
+    [data-theme="mondrian"] .card { border-width: 4px; position: relative; padding-top: 30px; }
+    [data-theme="mondrian"] .card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 14px;
+      border-bottom: 4px solid #111; background: var(--block);
+    }
+    [data-theme="mondrian"] .card:nth-child(1) { --block: var(--red); }
+    [data-theme="mondrian"] .card:nth-child(2) { --block: var(--blue); }
+    [data-theme="mondrian"] .card:nth-child(3) { --block: var(--yellow); }
+    [data-theme="mondrian"] .card:hover { background: var(--block); border-color: #111; }
+    [data-theme="mondrian"] .card:nth-child(-n+2):hover,
+    [data-theme="mondrian"] .card:nth-child(-n+2):hover p { color: #fff; }
+    [data-theme="mondrian"] .card:hover p { color: #111; }
+    [data-theme="mondrian"] .timeline { border-top-width: 4px; }
+    [data-theme="mondrian"] .row { border-bottom-width: 2px; }
+    [data-theme="mondrian"] .row:hover { background: var(--yellow); }
+    [data-theme="mondrian"] h1 { font-weight: 800; }
+    [data-theme="mondrian"] .t-top { border-bottom: 10px solid; border-image: linear-gradient(90deg, var(--red) 0 45%, #111 45% 46%, var(--yellow) 46% 70%, #111 70% 71%, var(--blue) 71%) 1; padding-bottom: 14px; }
+    [data-theme="mondrian"] .t-head { border-bottom-width: 4px; }
+    [data-theme="mondrian"] .t-body li { border-bottom-width: 2px; }
+    [data-theme="mondrian"] .t-body li::before { width: 10px; height: 10px; top: 23px; background: var(--red); }
+    [data-theme="mondrian"] .t-body li:nth-child(3n+2)::before { background: var(--blue); }
+    [data-theme="mondrian"] .t-body li:nth-child(3n)::before { background: var(--yellow); }
+
+    /* Queens: cream, forest green, burgundy, old-world serif */
+    :root[data-theme="queens"] {
+      --bg: #f1ece1; --ink: #1d3a2b; --body: #3c4a40; --muted: #857c69;
+      --line: #d3c9b5; --line-strong: #1d3a2b; --card-hover: #e8e0cf;
+      --accent: #6c1f2a;
+      --display: "Cormorant Garamond", Georgia, serif;
+    }
+    [data-theme="queens"] h1 { font-weight: 600; letter-spacing: -0.02em; }
+    [data-theme="queens"] .subtitle { font-family: var(--display); font-style: italic; font-size: 30px; color: var(--accent); }
+    [data-theme="queens"] .label, [data-theme="queens"] nav { text-transform: uppercase; letter-spacing: 0.14em; font-size: 13px; }
+    [data-theme="queens"] .card h3, [data-theme="queens"] .row strong, [data-theme="queens"] #favorites h3 { font-family: var(--display); font-size: 25px; font-weight: 600; letter-spacing: 0; }
+    [data-theme="queens"] .row strong { font-size: 20px; }
+    [data-theme="queens"] .card { border-color: var(--ink); outline: 1px solid var(--ink); outline-offset: -6px; padding: 22px 24px 18px; }
+    [data-theme="queens"] .card:hover { background: var(--ink); }
+    [data-theme="queens"] .card:hover h3, [data-theme="queens"] .card:hover p, [data-theme="queens"] .card:hover .arrow { color: var(--bg); }
+    [data-theme="queens"] .card:hover { outline-color: var(--bg); }
+    [data-theme="queens"] .intro a { text-decoration-color: var(--accent); }
+    [data-theme="queens"] .t-head h2 { font-weight: 600; letter-spacing: -0.02em; }
+    [data-theme="queens"] .t-role { font-family: var(--display); font-style: italic; color: var(--accent); }
+    [data-theme="queens"] .t-body li::before { content: "\2766"; background: none; width: auto; height: auto; top: 16px; left: 0; color: var(--accent); font-size: 15px; }
+
+    /* Twombly: raw canvas, graphite, crimson scrawl */
+    :root[data-theme="twombly"] {
+      --bg: #ece6d9; --ink: #2a2826; --body: #4a4641; --muted: #8b8478;
+      --line: #cfc6b5; --line-strong: #8b8478; --card-hover: #e4dccb;
+      --accent: #b3303d; --rose: #d98d91;
+      --hand: "Caveat", cursive;
+    }
+    [data-theme="twombly"] h1 { font-weight: 600; letter-spacing: -0.035em; }
+    [data-theme="twombly"] .label { font-family: var(--hand); font-size: 26px; color: var(--accent); transform: rotate(-1.5deg); transform-origin: left; }
+    [data-theme="twombly"] .subtitle { font-family: var(--hand); font-size: 34px; color: var(--body); }
+    [data-theme="twombly"] .card { border-style: dashed; border-color: var(--line-strong); }
+    [data-theme="twombly"] .card:hover { background: radial-gradient(120% 90% at 15% 20%, rgba(217,141,145,.45), transparent 60%), var(--card-hover); }
+    [data-theme="twombly"] .card .arrow, [data-theme="twombly"] .row:hover .arrow { color: var(--accent); }
+    [data-theme="twombly"] .row:hover { background: linear-gradient(90deg, rgba(217,141,145,.28), transparent 70%); }
+    [data-theme="twombly"] .t-role { font-family: var(--hand); font-size: 32px; color: var(--accent); }
+    [data-theme="twombly"] .t-body li::before { background: var(--accent); height: 2px; transform: rotate(-12deg); }
+
+    /* Decorative art, one per theme */
+    .art { display: none; }
+    .art svg { display: block; }
+    [data-theme="mondrian"] .art-mondrian, [data-theme="twombly"] .art-twombly { display: block; }
+    .art-mondrian { margin-top: 22px; width: 132px; }
+    .art-twombly { margin-top: -6px; width: min(420px, 90%); color: var(--accent); }
+    .art-twombly path { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: scrawl 2.4s .2s ease-out forwards; }
+    @keyframes scrawl { to { stroke-dashoffset: 0; } }
+
+    /* Theme switcher */
+    .swatches { display: flex; gap: 8px; margin-left: 6px; }
+    .swatch {
+      width: 18px; height: 18px; border-radius: 50%; cursor: pointer; padding: 0;
+      border: 1px solid var(--line-strong); background: var(--sw); outline-offset: 3px;
+      transition: transform .15s;
+    }
+    .swatch:hover { transform: scale(1.15); }
+    .swatch[aria-pressed="true"] { outline: 1.5px solid var(--ink); }
+    .swatch[data-set="mono"] { --sw: linear-gradient(135deg, #fdfdfc 50%, #111 50%); }
+    .swatch[data-set="mondrian"] { --sw: conic-gradient(#d42a20 0 25%, #f4c20d 0 50%, #fff 0 75%, #1d4f9f 0); border-radius: 2px; }
+    .swatch[data-set="queens"] { --sw: linear-gradient(135deg, #1d3a2b 50%, #6c1f2a 50%); }
+    .swatch[data-set="twombly"] { --sw: radial-gradient(circle at 40% 40%, #b3303d 0 35%, #ece6d9 36%); }
+
+    body, .card, .row, .takeover { transition: background-color .4s, color .4s, border-color .4s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .art-twombly path { animation: none; stroke-dashoffset: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .takeover.animating { transition: opacity .2s; }
+      .takeover .inner, .t-body li { transition: none; transform: none; }
+    }
+
+    @media (max-width: 900px) {
+      .takeover .inner { padding: 14px 16px 60px; }
+      .t-head, .t-body { grid-template-columns: 1fr; gap: 20px; }
+      .t-head { padding-top: 32px; }
+      .t-role { font-size: 19px; }
+      .t-body li { font-size: 16.5px; }
+      .t-hero { padding: 20px 16px 0; }
+      .t-hero img { height: 240px !important; }
+      .t-video { padding: 20px 16px 0; }
+      .t-video iframe { height: 240px !important; }
+    }
+
     @media (max-width: 900px) {
       .wrap { padding: 0 16px; }
       nav { font-size: 16px; gap: 14px; }
@@ -108,8 +283,16 @@
       .row .k { display: none; }
       .row .r { grid-column: 1; }
       .row .arrow { grid-column: 2; grid-row: 1 / span 2; }
+      #favorites ul { columns: 1 !important; }
     }
   </style>
+  <script>
+    (function () {
+      let t = 'mono';
+      try { t = localStorage.getItem('colorway') || t; } catch (e) {}
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute">
@@ -121,19 +304,41 @@
   <div class="wrap">
     <nav>
       <a href="#work">Work</a><span class="dot">•</span>
+      <a href="#favorites">Favorites</a><span class="dot">•</span>
       <a href="https://github.com/dangutierrez/skills">Library</a><span class="dot">•</span>
       <a href="#contact">Contact</a>
+      <div class="swatches" role="group" aria-label="Colorway">
+        <button class="swatch" data-set="mono" aria-label="Mono colorway" title="Mono"></button>
+        <button class="swatch" data-set="mondrian" aria-label="Mondrian colorway" title="Mondrian"></button>
+        <button class="swatch" data-set="queens" aria-label="Queens colorway" title="Queens"></button>
+        <button class="swatch" data-set="twombly" aria-label="Twombly colorway" title="Twombly"></button>
+      </div>
     </nav>
 
     <header class="hero">
       <div>
         <h1>Dan Gutierrez</h1>
         <p class="subtitle">Senior Product Manager · Austin</p>
+        <div class="art art-twombly" aria-hidden="true">
+          <svg viewBox="0 0 420 70" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+            <path d="M4 44c22-30 38-34 44-18s-18 30-10 34 34-46 52-44-6 40 6 42 36-50 58-46-10 42 4 44 40-52 60-46-8 40 8 42 38-48 58-42-6 36 10 38 34-40 50-36-4 30 8 30 30-30 44-28"/>
+          </svg>
+        </div>
       </div>
       <div class="intro">
-        <p>Senior Product Manager who ships AI and learning products that make complex work simpler.
-          Led product at <a href="https://www.intellum.com">Intellum</a>, <a href="https://www.clover.com">Clover</a>, and <a href="https://www.accenture.com">Accenture</a>.</p>
+        <p>Product leader with 12 years building 0→1 products across AI, fintech/POS, and B2B SaaS. Shipped Intellum's first three production LLM agents (2.5x search conversion) and moved the product org from adoption metrics to impact measurement. At Clover, launched Kiosk ($5–10M first-year revenue, 25%+ above target) and contactless commerce products that processed $60M+ in payments.</p>
         <a href="#work" aria-label="Scroll to work">
+          <div class="art art-mondrian" aria-hidden="true">
+            <svg viewBox="0 0 132 88">
+              <rect width="132" height="88" fill="#111"/>
+              <rect x="3" y="3" width="60" height="52" fill="#d42a20"/>
+              <rect x="67" y="3" width="62" height="24" fill="#f7f4ec"/>
+              <rect x="67" y="31" width="38" height="24" fill="#f7f4ec"/>
+              <rect x="109" y="31" width="20" height="54" fill="#f4c20d"/>
+              <rect x="3" y="59" width="26" height="26" fill="#f7f4ec"/>
+              <rect x="33" y="59" width="72" height="26" fill="#1d4f9f"/>
+            </svg>
+          </div>
           <svg class="down" viewBox="0 0 20 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v20M3 15l7 7 7-7"/></svg>
         </a>
       </div>
@@ -142,36 +347,390 @@
     <main id="work">
       <p class="label">Selected work</p>
       <section class="cards">
-        <a class="card" href="#">
+        <a class="card" href="#intellum-ai" data-open="intellum-ai">
           <h3>Intellum AI agents</h3>
           <p>Improved content discovery and learning outcomes.</p>
           <svg class="arrow"><use href="#arrow"/></svg>
         </a>
-        <a class="card" href="#">
+        <a class="card" href="#clover-kiosk" data-open="clover-kiosk">
           <h3>Clover Kiosk</h3>
           <p>Increased in-store engagement and conversion.</p>
           <svg class="arrow"><use href="#arrow"/></svg>
         </a>
-        <a class="card" href="#">
-          <h3>Contactless Sport Commerce</h3>
+        <a class="card" href="#sport-commerce" data-open="sport-commerce">
+          <h3>Contactless Commerce - Clover Sport</h3>
           <p>Built scalable checkout experiences for fans and venues.</p>
           <svg class="arrow"><use href="#arrow"/></svg>
         </a>
       </section>
 
       <section class="timeline">
-        <a class="row" href="#"><span class="k">Current</span><span class="y">2023–</span><span class="r"><strong>Intellum</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
-        <a class="row" href="#"><span class="k">Past</span><span class="y">2022–2023</span><span class="r"><strong>Clover</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
-        <a class="row" href="#"><span class="k">Past</span><span class="y">2019–2022</span><span class="r"><strong>Clover Sport</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
-        <a class="row" href="#"><span class="k">Past</span><span class="y">2014–2019</span><span class="r"><strong>Accenture</strong><span class="sep">·</span>Product Lead / PM</span><svg class="arrow"><use href="#arrow"/></svg></a>
-        <a class="row" href="#"><span class="k">Education</span><span class="y">2013</span><span class="r"><strong>Texas A&amp;M</strong><span class="sep">·</span>B.S. Industrial Distribution</span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="row" href="#intellum" data-open="intellum"><span class="k">Current</span><span class="y">2023–</span><span class="r"><strong>Intellum</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="row" href="#clover" data-open="clover"><span class="k">Past</span><span class="y">2022–2023</span><span class="r"><strong>Clover</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="row" href="#clover-sport" data-open="clover-sport"><span class="k">Past</span><span class="y">2019–2022</span><span class="r"><strong>Clover Sport</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="row" href="#accenture" data-open="accenture"><span class="k">Past</span><span class="y">2014–2019</span><span class="r"><strong>Accenture</strong><span class="sep">·</span>Product Lead / PM</span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="row" href="#texas-am" data-open="texas-am"><span class="k">Education</span><span class="y">2013</span><span class="r"><strong>Texas A&amp;M</strong><span class="sep">·</span>B.S. Industrial Distribution</span><svg class="arrow"><use href="#arrow"/></svg></a>
       </section>
     </main>
 
+    <section id="favorites" style="padding: 60px 0 80px; border-top: 1px solid var(--line);">
+      <p class="label">Favorites</p>
+
+      <div style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--ink);">Books</h3>
+        <ul style="list-style: none; font-size: 16px; line-height: 1.7; color: var(--body);">
+          <li>Blood Meridian — Cormac McCarthy</li>
+          <li>Hitchhiker's Guide to the Galaxy — Douglas Adams</li>
+          <li>The Grey King — Susan Cooper</li>
+          <li>The Road — Cormac McCarthy</li>
+          <li>The Great Gatsby — F. Scott Fitzgerald</li>
+          <li>Of Mice and Men — John Steinbeck</li>
+          <li>The Old Man and the Sea — Ernest Hemingway</li>
+          <li>Tess of the d'Urbervilles — Thomas Hardy</li>
+          <li>American Colossus — H.W. Brands</li>
+          <li>Leonardo da Vinci — Walter Isaacson</li>
+          <li>Steve Jobs — Walter Isaacson</li>
+          <li>How to Change — Katy Milkman</li>
+          <li>Energy and Civilization — Vaclav Smil</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--ink);">Movies <span style="font-weight: 400; font-size: 15px; color: var(--muted);">· <a href="https://letterboxd.com/dan_e_gee/list/favorite-all-time/" style="text-decoration: underline;">View on Letterboxd</a></span></h3>
+        <ul style="list-style: none; font-size: 16px; line-height: 1.7; color: var(--body); columns: 2; column-gap: 40px;">
+          <li>28 Days Later</li>
+          <li>2001: A Space Odyssey</li>
+          <li>A.I. Artificial Intelligence</li>
+          <li>Aftersun</li>
+          <li>Billy Madison</li>
+          <li>Enter the Void</li>
+          <li>Fantastic Mr. Fox</li>
+          <li>Fight Club</li>
+          <li>Halloween</li>
+          <li>Hereditary</li>
+          <li>Inception</li>
+          <li>Inglourious Basterds</li>
+          <li>Interstellar</li>
+          <li>Kicking and Screaming</li>
+          <li>Life Is Beautiful</li>
+          <li>Minari</li>
+          <li>Old School</li>
+          <li>Oldboy</li>
+          <li>Requiem for a Dream</li>
+          <li>Step Brothers</li>
+          <li>The Departed</li>
+          <li>The Matrix</li>
+          <li>The Tree of Life</li>
+          <li>The Witch</li>
+          <li>There Will Be Blood</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--ink);">Music <span style="font-weight: 400; font-size: 15px; color: var(--muted);">· Track of the Week 2026</span></h3>
+        <iframe style="border-radius: 12px; margin-top: 12px;" src="https://open.spotify.com/embed/playlist/3GfmnPVWLR9hiD0lcztP1B?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      </div>
+    </section>
+
     <section id="contact">
       <p class="label">Contact</p>
-      <p>Find me on <a href="https://github.com/dangutierrez">GitHub</a>.</p>
+      <p><a href="mailto:daniel.gutierrez2013@gmail.com">daniel.gutierrez2013@gmail.com</a> · <a href="https://linkedin.com/in/Daniel-Gutierrez-2013">LinkedIn</a> · <a href="https://github.com/dangutierrez">GitHub</a></p>
     </section>
   </div>
+
+  <div class="takeover" id="takeover" role="dialog" aria-modal="true" aria-labelledby="t-title" aria-hidden="true">
+    <div class="inner">
+      <div class="t-top">
+        <span>Dan Gutierrez</span>
+        <button class="t-close" type="button" aria-label="Close">Close
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l12 12M16 4L4 16"/></svg>
+        </button>
+      </div>
+      <div class="t-hero" style="display: none;">
+        <img style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px;" alt="" />
+      </div>
+      <header class="t-head">
+        <div>
+          <h2 id="t-title"></h2>
+          <p class="t-role"></p>
+        </div>
+        <p class="t-summary"></p>
+      </header>
+      <div class="t-video" style="display: none;">
+        <iframe style="width: 100%; height: 400px; border: 0; border-radius: 8px;" allowfullscreen></iframe>
+      </div>
+      <div class="t-body">
+        <ul class="t-bullets"></ul>
+        <dl class="t-meta"></dl>
+      </div>
+      <nav class="t-nav" aria-label="Sections">
+        <a class="prev" href="#"><svg class="arrow flip"><use href="#arrow"/></svg><span></span></a>
+        <a class="next" href="#"><span></span><svg class="arrow"><use href="#arrow"/></svg></a>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    // Resume content. Edit bullets here; order controls prev/next navigation.
+    const SECTIONS = {
+      'intellum-ai': {
+        title: 'Intellum AI agents', role: 'Intellum - Senior Product Manager',
+        summary: 'Shipped the company\'s first three production LLM agents, achieving 2.5x search conversion lift.',
+        image: 'images/intellum-ai.jpg',
+        meta: { Years: '2023-', Focus: 'Generative AI, LLM agents, RAG' },
+        links: [
+          { title: 'AI Grading Open-Ended Questions', url: 'https://www.intellum.com/resources/blog/ai-grading-open-ended-questions' },
+          { title: 'What\'s New in Intellum - Learner AI', url: 'https://www.intellum.com/resources/webinar/whats-new-how-intellum-is-transforming-learner-and-admin-experiences' },
+          { title: 'What\'s New and Why It Matters', url: 'https://www.intellum.com/resources/webinar/whats-new-in-intellum-and-why-it-matters-now' }
+        ],
+        bullets: [
+          'Shipped the company\'s first three generative AI agents (LLM search, course tutor, AI-graded assessment review) in two quarters. Prototyped the workflows, wrote the prompts and MCP tool calls, and defined the eval suite (LangSmith).',
+          'Learner search conversion rose 2.5x (6.75% to 16.67%) across 58K learners, and the assessment agent reached 216% of its adoption target.',
+          'Delivered a 44% lift in course completion (74.6% for adopters vs. 51.7% for non-adopters) by ideating, planning, and delivering a critical learning workflow optimization.',
+          'Built and proved the financial model for an e-learning standards integration showing $219K year-one gross margin at 45.6%, moving leadership from deferral to funding.'
+        ]
+      },
+      'clover-kiosk': {
+        title: 'Clover Kiosk', role: 'Clover - Senior Product Manager',
+        summary: 'Launched self-serve kiosk generating $5-10M first-year revenue, 25%+ above target.',
+        image: 'images/clover-kiosk.jpg',
+        meta: { Years: '2022-2023', Focus: 'Hardware + payments + POS' },
+        links: [
+          { title: 'Clover Kiosk Product Page', url: 'https://clover.com/kiosk' },
+          { title: 'Fiserv Press Release', url: 'https://investors.fiserv.com/node/49466/pdf' },
+          { title: 'Nilson Report Coverage', url: 'https://nilsonreport.com/articles/clover-kiosk-from-fiserv/' }
+        ],
+        bullets: [
+          'Launched Clover Kiosk, generating $5-10M first-year revenue, 25%+ above sales and adoption targets. Set the product vision and led hardware, payments, pricing, and GTM through field testing to launch.',
+          'Unlocked an estimated $16M by planning, designing, and launching new bar checkout capabilities across US, Canada, and UK.',
+          'Raised vertical SaaS penetration 5-10% by shipping restaurant POS capabilities with the broader restaurant team.'
+        ]
+      },
+      'sport-commerce': {
+        title: 'Contactless Commerce - Clover Sport', role: 'Clover Sport - Senior Product Manager',
+        summary: 'Built contactless commerce suite that processed $60M+ in payments.',
+        image: 'images/contactless-commerce.jpg',
+        meta: { Years: '2019-2022', Focus: 'Stadium commerce, mobile ordering' },
+        video: 'https://players.brightcove.net/2474524878001/BJdEm9fkN_default/index.html?videoId=6306752109112',
+        links: [
+          { title: 'Product Demo Video', url: 'https://players.brightcove.net/2474524878001/BJdEm9fkN_default/index.html?videoId=6306752109112' },
+          { title: 'Phoenix Suns Mobile App', url: 'https://www.nba.com/suns/app/' },
+          { title: 'Sports Business Journal Feature', url: 'https://www.sportsbusinessjournal.com/Journal/Issues/2021/09/13/In-Depth/Venues/' }
+        ],
+        bullets: [
+          'Owned the roadmap for a sports commerce platform (enterprise, consumer, and API products) generating $25M+.',
+          'Launched the Contactless Commerce suite after COVID-19; it grew to 20%+ of supplemental ARR and processed $60M in payments.',
+          'Shipped and scaled Dual Mode kiosk, giving venues operational flexibility and a counter-position against competitors.',
+          'Launched four new hardware model integrations, aligning hardware, engineering, marketing, sales, and operations readiness.',
+          'Mentored two PMs who owned configuration, suites, and analytics.'
+        ]
+      },
+      'intellum': {
+        title: 'Intellum', role: 'Senior Product Manager',
+        summary: 'B2B SaaS learning platform for customer, partner, and employee education.',
+        meta: { Years: '2023-Present', Status: 'Current' },
+        bullets: [
+          'Shipped the company\'s first three production LLM agents (LLM search, course tutor, AI-graded assessment review). Search conversion rose 2.5x across 58K learners.',
+          'Delivered a 44% lift in course completion by optimizing a critical learning workflow. Performed adopter-versus-non-adopter analysis in SQL/BigQuery across 12M enrollments.',
+          'Rebuilt revenue attribution for the social learning module and took direct revenue to $154K against an $87K target (177%). Enterprise deals closing with the module attached grew 223% year over year.',
+          'Drove portfolio decisions with usage and customer-level impact analysis: sunsetted a low-adoption feature area and re-scoped a React SPA migration, redirecting 25% of engineering capacity to the AI roadmap.',
+          'Led a 4-team response to an authentication failure during a flagship launch, protecting a $10M+ renewal.',
+          'Spearheaded the product organization\'s AI working practices and built reusable agents, cutting a monthly SQL/BigQuery reporting process from 5 hours to under 1 and weekly release notes from 2 hours to 10 minutes.'
+        ]
+      },
+      'clover': {
+        title: 'Clover', role: 'Senior Product Manager',
+        summary: 'Point-of-sale and developer platform: $100M+ revenue, $100B+ GPV, 200K+ merchants.',
+        meta: { Years: '2022-2023', Status: 'Past', Scale: 'US, Canada, EMEA, LATAM' },
+        bullets: [
+          'Launched Clover Kiosk, generating $5-10M first-year revenue, 25%+ above sales and adoption targets.',
+          'Unlocked an estimated $16M by planning, designing, and launching new bar checkout capabilities across US, Canada, and UK.',
+          'Raised vertical SaaS penetration 5-10% by shipping restaurant POS capabilities with the broader restaurant team.'
+        ]
+      },
+      'clover-sport': {
+        title: 'Clover Sport', role: 'Senior Product Manager',
+        summary: 'Commerce platform for stadiums, venues, and live events (acquired by Clover/Fiserv 2020).',
+        meta: { Years: '2019-2022', Status: 'Past' },
+        bullets: [
+          'Owned the roadmap for a sports commerce platform generating $25M+ across enterprise, consumer, and API products.',
+          'Launched the Contactless Commerce suite after COVID-19; it grew to 20%+ of supplemental ARR and processed $60M in payments.',
+          'Shipped and scaled Dual Mode kiosk, giving venues operational flexibility and a counter-position against competitors.',
+          'Launched four new hardware model integrations, aligning hardware, engineering, marketing, sales, and operations readiness.',
+          'Mentored two PMs who owned configuration, suites, and analytics.'
+        ]
+      },
+      'accenture': {
+        title: 'Accenture', role: 'Product Lead / PM',
+        summary: 'Product management and delivery for enterprise networking and SMB products.',
+        meta: { Years: '2014-2019', Status: 'Past' },
+        bullets: [
+          'Managed, onboarded, and trained team of eight product owners as Product Lead for Enterprise Networking Product (2017-2019).',
+          'Led team to deconstruct complex client requests into a well-defined roadmap, enabling the team to prepare 29% more features per sprint ($88K more billable software development).',
+          'Led product management for client\'s largest customer in total contract value: $240 million for client and $12+ million in Accenture value (2016-2017).',
+          'Onboarded 10K+ customer locations, decreased client\'s time to revenue, increased product adoption by launching a self-service ordering and onboarding product.',
+          'Drove new networking product launch and operational success as Senior Product Launch Analyst for SMB Networking Product (2014-2016), activating nationwide sales channels and developing scalable operational procedures.'
+        ]
+      },
+      'texas-am': {
+        title: 'Texas A&M University', role: 'B.S. Industrial Distribution',
+        summary: 'College Station, Texas.',
+        meta: { Year: '2013' },
+        bullets: [
+          'B.S. Industrial Distribution, May 2013'
+        ]
+      }
+    };
+    const ORDER = Object.keys(SECTIONS);
+
+    // Colorway switcher
+    const swatches = document.querySelectorAll('.swatch');
+    function setTheme(t) {
+      document.documentElement.dataset.theme = t;
+      swatches.forEach(b => b.setAttribute('aria-pressed', b.dataset.set === t));
+      try { localStorage.setItem('colorway', t); } catch (e) {}
+    }
+    swatches.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.set)));
+    setTheme(document.documentElement.dataset.theme);
+
+    const el = document.getElementById('takeover');
+    const q = s => el.querySelector(s);
+    const heroContainer = el.querySelector('.t-hero');
+    const videoContainer = el.querySelector('.t-video');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let origin = null;   // element the takeover grew from
+    let current = null;
+
+    function clipTo(rect) {
+      const w = innerWidth, h = innerHeight;
+      el.style.setProperty('--t', rect ? rect.top + 'px' : '0px');
+      el.style.setProperty('--r', rect ? (w - rect.right) + 'px' : '0px');
+      el.style.setProperty('--b', rect ? (h - rect.bottom) + 'px' : '0px');
+      el.style.setProperty('--l', rect ? rect.left + 'px' : '0px');
+    }
+
+    function render(id) {
+      const d = SECTIONS[id];
+      current = id;
+      q('#t-title').textContent = d.title;
+      q('.t-role').textContent = d.role;
+      q('.t-summary').textContent = d.summary;
+      if (d.image) {
+        heroContainer.style.display = 'block';
+        heroContainer.querySelector('img').src = d.image;
+        heroContainer.querySelector('img').alt = d.title;
+      } else {
+        heroContainer.style.display = 'none';
+        heroContainer.querySelector('img').src = '';
+      }
+      if (d.video) {
+        videoContainer.style.display = 'block';
+        videoContainer.querySelector('iframe').src = d.video;
+      } else {
+        videoContainer.style.display = 'none';
+        videoContainer.querySelector('iframe').src = '';
+      }
+      q('.t-bullets').innerHTML = '';
+      d.bullets.forEach((b, i) => {
+        const li = document.createElement('li');
+        li.textContent = b;
+        li.style.transitionDelay = (0.3 + i * 0.06) + 's';
+        q('.t-bullets').appendChild(li);
+      });
+      q('.t-meta').innerHTML = '';
+      Object.entries(d.meta).forEach(([k, v]) => {
+        const dt = document.createElement('dt'); dt.textContent = k;
+        const dd = document.createElement('dd'); dd.textContent = v;
+        q('.t-meta').append(dt, dd);
+      });
+      if (d.links && d.links.length > 0) {
+        const linksLabel = document.createElement('dt');
+        linksLabel.textContent = 'Resources';
+        linksLabel.style.marginTop = '24px';
+        q('.t-meta').appendChild(linksLabel);
+        const linksContainer = document.createElement('dd');
+        linksContainer.style.display = 'flex';
+        linksContainer.style.flexDirection = 'column';
+        linksContainer.style.gap = '8px';
+        d.links.forEach(link => {
+          const a = document.createElement('a');
+          a.href = link.url;
+          a.textContent = link.title;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.style.textDecoration = 'underline';
+          a.style.color = 'var(--ink)';
+          linksContainer.appendChild(a);
+        });
+        q('.t-meta').appendChild(linksContainer);
+      }
+      const i = ORDER.indexOf(id);
+      const prev = ORDER[(i - 1 + ORDER.length) % ORDER.length];
+      const next = ORDER[(i + 1) % ORDER.length];
+      q('.prev').href = '#' + prev; q('.prev').dataset.open = prev; q('.prev span').textContent = SECTIONS[prev].title;
+      q('.next').href = '#' + next; q('.next').dataset.open = next; q('.next span').textContent = SECTIONS[next].title;
+      el.scrollTop = 0;
+    }
+
+    function open(id, from, push = true) {
+      if (!SECTIONS[id]) return;
+      if (el.classList.contains('open')) {   // switching sections inside the takeover
+        el.classList.remove('shown');
+        setTimeout(() => { render(id); el.classList.add('shown'); }, 200);
+        if (push) history.pushState({ id }, '', '#' + id);
+        return;
+      }
+      origin = from || document.querySelector(`[data-open="${id}"]:not(.takeover *)`);
+      render(id);
+      el.classList.remove('animating');
+      clipTo(reduceMotion || !origin ? null : origin.getBoundingClientRect());
+      el.classList.add('open');
+      el.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('locked');
+      el.offsetHeight;                     // commit the starting clip before animating
+      el.classList.add('animating');
+      clipTo(null);
+      el.classList.add('shown');
+      q('.t-close').focus({ preventScroll: true });
+      if (push) history.pushState({ id }, '', '#' + id);
+    }
+
+    function close(fromHistory = false) {
+      if (!el.classList.contains('open')) return;
+      el.classList.remove('shown');
+      // shrink back into the original card/row if we came from one on the page
+      const target = document.querySelector(`main [data-open="${current}"]`) || origin;
+      if (!reduceMotion && target) clipTo(target.getBoundingClientRect());
+      const done = () => {
+        el.classList.remove('open', 'animating');
+        el.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('locked');
+        clipTo(null);
+        if (target) target.focus({ preventScroll: true });
+      };
+      setTimeout(done, reduceMotion ? 200 : 560);
+      if (!fromHistory) history.replaceState(null, '', location.pathname + location.search);
+    }
+
+    document.addEventListener('click', e => {
+      const a = e.target.closest('[data-open]');
+      if (!a || e.metaKey || e.ctrlKey) return;
+      e.preventDefault();
+      open(a.dataset.open, a);
+    });
+    q('.t-close').addEventListener('click', () => close());
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') close();
+      if (!el.classList.contains('open')) return;
+      if (e.key === 'ArrowRight') q('.next').click();
+      if (e.key === 'ArrowLeft') q('.prev').click();
+    });
+    addEventListener('popstate', () => {
+      const id = location.hash.slice(1);
+      if (SECTIONS[id]) open(id, null, false); else close(true);
+    });
+    // deep link, e.g. /#clover
+    if (SECTIONS[location.hash.slice(1)]) open(location.hash.slice(1), null, false);
+  </script>
 </body>
 </html>
