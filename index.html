@@ -130,6 +130,24 @@
     .t-role { margin-top: 16px; font-size: 24px; color: var(--muted); letter-spacing: normal; }
     .t-summary { font-size: 17px; line-height: 1.55; color: var(--body); }
     .t-hero { max-width: 1240px; margin: 0 auto; padding: 28px 44px 0; }
+    .t-carousel { padding-top: 28px; }
+    .c-track {
+      display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      border-radius: 8px; background: #000; scrollbar-width: none;
+    }
+    .c-track::-webkit-scrollbar { display: none; }
+    .c-track img { flex: 0 0 100%; width: 100%; aspect-ratio: 2000 / 786; object-fit: cover; scroll-snap-align: start; display: block; }
+    .c-controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; }
+    .c-btn {
+      background: none; border: 1px solid var(--line-strong); color: var(--ink); cursor: pointer;
+      width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+    }
+    .c-btn:hover { background: var(--card-hover); }
+    .c-btn .arrow { width: 16px; height: 16px; }
+    .c-btn .flip { transform: rotate(180deg); }
+    .c-dots { display: flex; gap: 8px; }
+    .c-dot { width: 8px; height: 8px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: var(--line-strong); opacity: .35; transition: opacity .2s, width .2s; }
+    .c-dot[aria-current="true"] { opacity: 1; width: 22px; border-radius: 4px; }
     .t-video { max-width: 1240px; margin: 0 auto; padding: 28px 44px 0; }
     .t-body { display: grid; grid-template-columns: 1fr 384px; gap: 48px; padding-top: 28px; }
     .t-body ul { list-style: none; }
@@ -485,6 +503,14 @@
       <div class="t-hero" style="display: none;">
         <img style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px;" alt="" />
       </div>
+      <div class="t-carousel" hidden>
+        <div class="c-track" tabindex="0" aria-roledescription="carousel"></div>
+        <div class="c-controls">
+          <button class="c-btn c-prev" type="button" aria-label="Previous image"><svg class="arrow flip"><use href="#arrow"/></svg></button>
+          <div class="c-dots"></div>
+          <button class="c-btn c-next" type="button" aria-label="Next image"><svg class="arrow"><use href="#arrow"/></svg></button>
+        </div>
+      </div>
       <header class="t-head">
         <div>
           <h2 id="t-title"></h2>
@@ -512,7 +538,10 @@
       'intellum-ai': {
         title: 'Intellum AI agents', role: 'Intellum - Senior Product Manager',
         summary: 'Shipped the company\'s first three production LLM agents, achieving 2.5x search conversion lift.',
-        image: 'images/intellum-ai.jpg',
+        images: [
+          { src: 'images/intellum-learner-agent-1.webp', alt: 'Learner Agent: personal AI tutor with Ask anything search and course progress' },
+          { src: 'images/intellum-learner-agent-2.webp', alt: 'Learner Agent: AI-graded assessment review suggesting activities to review' }
+        ],
         meta: { Years: '2023-', Focus: 'Generative AI, LLM agents, RAG' },
         links: [
           { title: 'AI Grading Open-Ended Questions', url: 'https://www.intellum.com/resources/blog/ai-grading-open-ended-questions' },
@@ -653,6 +682,46 @@
       el.style.setProperty('--l', rect ? rect.left + 'px' : '0px');
     }
 
+    // Image carousel: native scroll-snap (swipe on touch), arrows + dots
+    const carousel = el.querySelector('.t-carousel');
+    const track = carousel.querySelector('.c-track');
+    const dots = carousel.querySelector('.c-dots');
+    const slideTo = i => {
+      const n = track.children.length;
+      track.scrollTo({ left: ((i + n) % n) * track.clientWidth });
+    };
+    const slideIndex = () => Math.round(track.scrollLeft / track.clientWidth);
+    function renderCarousel(images) {
+      carousel.hidden = !images;
+      track.innerHTML = ''; dots.innerHTML = '';
+      if (!images) return;
+      images.forEach((im, i) => {
+        const img = document.createElement('img');
+        img.src = im.src; img.alt = im.alt; img.loading = i ? 'lazy' : 'eager';
+        track.appendChild(img);
+        const dot = document.createElement('button');
+        dot.className = 'c-dot'; dot.type = 'button';
+        dot.setAttribute('aria-label', `Image ${i + 1} of ${images.length}`);
+        dot.addEventListener('click', () => slideTo(i));
+        dots.appendChild(dot);
+      });
+      track.scrollLeft = 0;
+      syncDots();
+    }
+    function syncDots() {
+      const i = slideIndex();
+      [...dots.children].forEach((d, j) => d.setAttribute('aria-current', i === j));
+    }
+    track.addEventListener('scroll', syncDots, { passive: true });
+    carousel.querySelector('.c-prev').addEventListener('click', () => slideTo(slideIndex() - 1));
+    carousel.querySelector('.c-next').addEventListener('click', () => slideTo(slideIndex() + 1));
+    track.addEventListener('keydown', e => {   // arrows on the focused carousel move slides, not sections
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.stopPropagation(); e.preventDefault();
+        slideTo(slideIndex() + (e.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+
     function render(id) {
       const d = SECTIONS[id];
       current = id;
@@ -667,6 +736,7 @@
         heroContainer.style.display = 'none';
         heroContainer.querySelector('img').src = '';
       }
+      renderCarousel(d.images);
       if (d.video) {
         videoContainer.style.display = 'block';
         videoContainer.querySelector('iframe').src = d.video;
