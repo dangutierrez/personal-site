@@ -94,6 +94,8 @@
     .row strong { color: var(--ink); font-size: 16px; }
     .row .sep { margin: 0 6px; color: var(--muted); }
 
+    .projects { padding: 0 0 60px; }
+    .projects .label { margin-top: 0; }
     .fav-h { font-size: 20px; margin-bottom: 16px; color: var(--ink); }
 
     /* Contact */
@@ -132,11 +134,12 @@
     .t-hero { max-width: 1240px; margin: 0 auto; padding: 28px 44px 0; }
     .t-carousel { padding-top: 28px; }
     .c-track {
+      margin: 0 auto;
       display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
       border-radius: 8px; background: #000; scrollbar-width: none;
     }
     .c-track::-webkit-scrollbar { display: none; }
-    .c-track img { flex: 0 0 100%; width: 100%; aspect-ratio: 2000 / 786; object-fit: cover; scroll-snap-align: start; display: block; }
+    .c-track img { flex: 0 0 100%; width: 100%; aspect-ratio: var(--ar, 2000 / 786); object-fit: cover; scroll-snap-align: start; display: block; }
     .c-controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; }
     .c-btn {
       background: none; border: 1px solid var(--line-strong); color: var(--ink); cursor: pointer;
@@ -358,6 +361,7 @@
   <div class="wrap">
     <nav>
       <a href="#work">Work</a><span class="dot">•</span>
+      <a href="#projects">Projects</a><span class="dot">•</span>
       <a href="#favorites">Favorites</a><span class="dot">•</span>
       <a href="https://github.com/dangutierrez/skills">Library</a><span class="dot">•</span>
       <a href="#contact">Contact</a>
@@ -426,6 +430,27 @@
         <a class="row" href="#texas-am" data-open="texas-am"><span class="k">Education</span><span class="y">2013</span><span class="r"><strong>Texas A&amp;M</strong><span class="sep">·</span>B.S. Industrial Distribution</span><svg class="arrow"><use href="#arrow"/></svg></a>
       </section>
     </main>
+
+    <section id="projects" class="projects">
+      <p class="label">Personal projects</p>
+      <div class="cards">
+        <a class="card" href="#sky-builders" data-open="sky-builders">
+          <h3>Sky Builders</h3>
+          <p>A calm build-and-fly game that teaches early elementary kids addition through rockets.</p>
+          <svg class="arrow"><use href="#arrow"/></svg>
+        </a>
+        <a class="card" href="#pm-skills" data-open="pm-skills">
+          <h3>PM skills for Claude</h3>
+          <p>Open-source Claude Code skills for release notes, UX surveys, and meeting notes.</p>
+          <svg class="arrow"><use href="#arrow"/></svg>
+        </a>
+        <a class="card" href="#car-digest" data-open="car-digest">
+          <h3>Daily car-deal routine</h3>
+          <p>A scheduled Claude routine that scores used-car deals every morning.</p>
+          <svg class="arrow"><use href="#arrow"/></svg>
+        </a>
+      </div>
+    </section>
 
     <section id="favorites" class="fav" style="padding: 60px 0 80px; border-top: 1px solid var(--line);">
       <p class="label">Favorites</p>
@@ -590,6 +615,58 @@
           'Mentored two PMs who owned configuration, suites, and analytics.'
         ]
       },
+      'sky-builders': {
+        title: 'Sky Builders', role: 'Personal project · Learning game',
+        summary: 'A calm build-and-fly game for early elementary kids: read a mission, build a rocket, check the math, then fly it.',
+        images: [
+          { src: 'images/projects/sky-builders-math.jpg', alt: 'Engineer check: the parts weigh 7, the cargo weighs 7, how much does the whole rocket weigh?', ar: '16 / 10' },
+          { src: 'images/projects/sky-builders-build.jpg', alt: 'Building the rocket: picking an engine, with a weight versus thrust gauge', ar: '16 / 10' },
+          { src: 'images/projects/sky-builders-fly.jpg', alt: 'Flying the rocket low over the Golden Dunes toward a ring', ar: '16 / 10' },
+          { src: 'images/projects/sky-builders-nebula.jpg', alt: 'Flying the star fighter through the Lantern Nebula past a marbled planet and floating rocks', ar: '16 / 10' }
+        ],
+        meta: { Year: '2026', Built: 'Three.js, Claude Code', Status: '3 levels playable' },
+        links: [
+          { title: 'Play Sky Builders', url: 'https://sky-builders.daniel-gutierrez2013.workers.dev/' }
+        ],
+        bullets: [
+          'Kids read a short mission, build a rocket step by step (cargo, body, nose, fins, engine), paint it, then fly it through rings.',
+          'Turns physics into early elementary math. Before launch, an "engineer check" asks kids to add the parts and cargo weight, then compare weight to thrust.',
+          'Designed for early elementary readers: very low difficulty, gentle failures with a one-sentence hint, three tries with growing hints, and a read-aloud British voice.',
+          'Ran it like a product: a decision log and functional spec kept current with every change, simulated pilots to check every course is easy, and playtests from screenshots.',
+          'Three levels shipped on a nine-level plan: a rocket over the Golden Dunes, a jet through the Sea of Clouds, and a star fighter in the Lantern Nebula, where kids learn there\'s no air in space, so wings make no lift. Installable offline web app with touch steering for iPad.'
+        ]
+      },
+      'pm-skills': {
+        title: 'PM skills for Claude', role: 'Personal project · Open source',
+        summary: 'Reusable Claude Code skills that encode how I do recurring product work, so the output is consistent every time.',
+        meta: { Format: 'Claude Code skills', License: 'Public on GitHub' },
+        links: [
+          { title: 'dangutierrez/skills on GitHub', url: 'https://github.com/dangutierrez/skills' }
+        ],
+        bullets: [
+          'Release notes: writes customer-facing notes from a ticket and its merged PR, ordered for a reader rather than a reviewer. Runs a caveat checklist (backfill, rollout latency, deferred scope) and an accuracy-trap list that catches notes that are true but misleading.',
+          'UX survey: writes short post-launch surveys as Google Forms build sheets, and pushes back when a survey is the wrong research tool. Built on Nielsen Norman Group\'s question-writing rules, Judd Antin\'s research-value framing, and Bob Moesta\'s four forces.',
+          'Meeting transcripts: saves Granola meetings to a local folder as dated plain-text files, skipping ones already saved, with a fallback to summary plus notes on the free plan.',
+          'Each skill is a single SKILL.md plus reference files loaded on demand. Install by symlinking into ~/.claude/skills/.'
+        ]
+      },
+      'car-digest': {
+        title: 'Daily car-deal routine', role: 'Personal project · Claude routine',
+        summary: 'A scheduled Claude routine that scans used-car listings every morning, scores the deals, and updates a page my family uses to build a shortlist.',
+        images: [
+          { src: 'images/projects/car-digest-summary.jpg', alt: 'Car hunt page: daily match counts, strong-deal alerts, and model filters', ar: '64 / 45' },
+          { src: 'images/projects/car-digest-cards.jpg', alt: 'Scored listing cards with price, all-in estimate, history checks and a price trend', ar: '64 / 45' }
+        ],
+        meta: { Runs: 'Every morning, 7am', Built: 'Claude scheduled tasks, Python', Tracks: '4 models, 4 Texas metros' },
+        bullets: [
+          'Every morning a Claude routine searches four models across Austin, San Antonio, Houston, Dallas-Fort Worth, and Carvana, then writes a digest of new listings, price drops, and sold cars.',
+          'Scores each car 0–100: price against a fair-value model fit on current listings (age, miles, trim), CarGurus rating, time on the lot, and price cuts, blended 65/35 with a family-fit ranking.',
+          'Hard rules drop salvage, flood, and branded titles. Softer risks (one accident, ex-rental, open recalls) are flagged rather than hidden, so the judgment call stays with a person.',
+          'History-checks the top candidates each run, then publishes a shared page where family members mark cars Interested or Pass. The next run reads those marks and alerts on price cuts for starred cars.',
+          'Guardrails by design: it never gets past bot checks, never contacts sellers, and never submits forms.',
+          'How I\'m thinking about it: the same pattern fits any slow, high-stakes decision. A routine does the daily scanning and scoring, and people make the call.'
+        ]
+      },
       'intellum': {
         title: 'Intellum', role: 'Senior Product Manager',
         summary: 'B2B SaaS learning platform for customer, partner, and employee education.',
@@ -688,13 +765,20 @@
     const dots = carousel.querySelector('.c-dots');
     const slideTo = i => {
       const n = track.children.length;
-      track.scrollTo({ left: ((i + n) % n) * track.clientWidth });
+      const to = cur = (i + n) % n;
+      track.scrollTo({ left: to * track.clientWidth });
+      syncDots(to);   // don't wait for the smooth scroll to land
     };
     const slideIndex = () => Math.round(track.scrollLeft / track.clientWidth);
+    let cur = 0;   // the slide we're on or heading to (scrollLeft lags during smooth scrolls)
     function renderCarousel(images) {
       carousel.hidden = !images;
       track.innerHTML = ''; dots.innerHTML = '';
       if (!images) return;
+      const ar = images[0].ar || '2000 / 786';
+      const [aw, ah] = ar.split('/').map(Number);
+      track.style.setProperty('--ar', ar);
+      track.style.maxWidth = `min(100%, calc(62vh * ${aw / ah}))`;   // keep tall shots from pushing the title off screen
       images.forEach((im, i) => {
         const img = document.createElement('img');
         img.src = im.src; img.alt = im.alt; img.loading = i ? 'lazy' : 'eager';
@@ -705,20 +789,20 @@
         dot.addEventListener('click', () => slideTo(i));
         dots.appendChild(dot);
       });
-      track.scrollLeft = 0;
-      syncDots();
+      track.scrollLeft = 0; cur = 0;
+      syncDots(0);
     }
-    function syncDots() {
-      const i = slideIndex();
+    function syncDots(target) {
+      const i = Number.isInteger(target) ? target : slideIndex();
       [...dots.children].forEach((d, j) => d.setAttribute('aria-current', i === j));
     }
-    track.addEventListener('scroll', syncDots, { passive: true });
-    carousel.querySelector('.c-prev').addEventListener('click', () => slideTo(slideIndex() - 1));
-    carousel.querySelector('.c-next').addEventListener('click', () => slideTo(slideIndex() + 1));
+    track.addEventListener('scrollend', () => { cur = slideIndex(); syncDots(cur); });   // after a swipe
+    carousel.querySelector('.c-prev').addEventListener('click', () => slideTo(cur - 1));
+    carousel.querySelector('.c-next').addEventListener('click', () => slideTo(cur + 1));
     track.addEventListener('keydown', e => {   // arrows on the focused carousel move slides, not sections
       if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
         e.stopPropagation(); e.preventDefault();
-        slideTo(slideIndex() + (e.key === 'ArrowRight' ? 1 : -1));
+        slideTo(cur + (e.key === 'ArrowRight' ? 1 : -1));
       }
     });
 
@@ -813,7 +897,7 @@
       if (!el.classList.contains('open')) return;
       el.classList.remove('shown');
       // shrink back into the original card/row if we came from one on the page
-      const target = document.querySelector(`main [data-open="${current}"]`) || origin;
+      const target = document.querySelector(`.wrap [data-open="${current}"]`) || origin;
       if (!reduceMotion && target) clipTo(target.getBoundingClientRect());
       const done = () => {
         el.classList.remove('open', 'animating');
