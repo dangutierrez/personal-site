@@ -619,8 +619,12 @@
         title: 'Sky Builders', role: 'Personal project · Learning game',
         summary: 'A calm build-and-fly game for early elementary kids: read a mission, build a rocket, check the math, then fly it.',
         images: [
-          { src: 'images/projects/sky-builders-math.jpg', alt: 'Engineer check: the parts weigh 7, the cargo weighs 7, how much does the whole rocket weigh?', ar: '16 / 10' },
-          { src: 'images/projects/sky-builders-build.jpg', alt: 'Building the rocket: picking an engine, with a weight versus thrust gauge', ar: '16 / 10' },
+          { src: 'images/projects/sky-builders-build.jpg', alt: 'Building the rocket: a path of build steps across the top, the rocket in the middle, engine choices in a dock, and a weight versus thrust check', ar: '16 / 10' },
+          { src: 'images/projects/sky-builders-mission.jpg', alt: 'The mission card as a ticket that leads with words, one sentence per line, with a Help button', ar: '16 / 10' },
+          { src: 'images/projects/sky-builders-help.jpg', alt: 'Help flips the mission ticket to pictures and reads it aloud, lighting up each word, in the dark Lantern Night theme', ar: '16 / 10' },
+          { src: 'images/projects/sky-builders-math.jpg', alt: 'Engineer check: add the parts and cargo weight, with blocks in rows of five and four answer keys', ar: '16 / 10' },
+          { src: 'images/projects/sky-builders-guess.jpg', alt: 'Will it fly? Blue thrust blocks push up and orange weight blocks pull down, with Yes and No in the same neutral style', ar: '16 / 10' },
+          { src: 'images/projects/sky-builders-win.jpg', alt: 'Mission complete: four stars, one read-aloud button, and a one-row bonus question about why it flew', ar: '16 / 10' },
           { src: 'images/projects/sky-builders-fly.jpg', alt: 'Flying the rocket low over the Golden Dunes toward a ring', ar: '16 / 10' },
           { src: 'images/projects/sky-builders-nebula.jpg', alt: 'Flying the star fighter through the Lantern Nebula past a marbled planet and floating rocks', ar: '16 / 10' }
         ],
@@ -629,7 +633,8 @@
           'Kids read a short mission, build a rocket step by step (cargo, body, nose, fins, engine), paint it, then fly it through rings.',
           'Turns physics into early elementary math. Before launch, an "engineer check" asks kids to add the parts and cargo weight, then compare weight to thrust.',
           'Designed for early elementary readers: very low difficulty, gentle failures with a one-sentence hint, three tries with growing hints, and a read-aloud British voice.',
-          'Ran it like a product: a decision log and functional spec kept current with every change, simulated pilots to check every course is easy, and playtests from screenshots.',
+          'Ran it like a product: written requirements, a decision log, a functional spec, and a design system, all kept current with every change, plus simulated pilots to check every course is easy and playtests from screenshots.',
+          'Built on a design system with clear principles. A critique of every screen led to an interactive lab where I compared layouts and styles, then picked one set of tokens and components with two themes: Storybook Bold for daytime worlds and Lantern Night for space. Each screen has one primary action, each color has one job (orange is always weight, blue is always thrust), and mission cards lead with words, with a Help button that flips to pictures and reads aloud, so kids read instead of guessing.',
           'Three levels shipped on a nine-level plan: a rocket over the Golden Dunes, a jet through the Sea of Clouds, and a star fighter in the Lantern Nebula, where kids learn there\'s no air in space, so wings make no lift. Installable offline web app with touch steering for iPad.'
         ]
       },
