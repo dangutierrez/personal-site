@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="mondrian">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,104 +9,93 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&family=Libre+Caslon+Display&family=Hanken+Grotesk:wght@400&family=Caveat:wght@600&family=Anton&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Base tokens = Mondrian (the default colorway). Each colorway uses
-       exactly two font styles: --f-display/--w-display and --f-text/--w-text. */
+    /* One colorway, after Mondrian. Each home section, and the detail pages opened
+       from it, takes one Mondrian color for its bullets and accent text. The colors
+       rotate red, blue, yellow down the page. */
     :root {
-      --bg: #f7f4ec; --ink: #111; --body: #222; --muted: #5a5a5a;
-      --line: #111; --line-strong: #111; --card-hover: #fff;
-      --red: #d42a20; --blue: #1d4f9f; --yellow: #f4c20d;
-      --accent: var(--red);
-      --f-display: "Inter", "Helvetica Neue", Arial, sans-serif; --w-display: 800; --ls-display: -0.045em;
-      --f-text: "Inter", "Helvetica Neue", Arial, sans-serif; --w-text: 400;
-      --pattern: none;
+      --bg: #f7f4ec; --ink: #111; --muted: #5a5a5a;
+      --red: #9f1d22;     /* after Rosso Cina, the deep red on 1960s Ferraris */
+      --blue: #1d4f9f; --yellow: #f4c20d;
+      --ochre: #866400;   /* yellow is too light to read as text, so yellow sections set text in ochre */
+      --font: "Inter", "Helvetica Neue", Arial, sans-serif;
     }
+    [data-tone="red"] { --tone: var(--red); --tone-text: var(--red); }
+    [data-tone="blue"] { --tone: var(--blue); --tone-text: var(--blue); }
+    [data-tone="yellow"] { --tone: var(--yellow); --tone-text: var(--ochre); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
     html { scroll-behavior: smooth; }
     body {
-      background: var(--bg);
-      color: var(--ink);
-      background-image: var(--pattern); background-attachment: fixed;
-      font-family: var(--f-text); font-weight: var(--w-text);
+      background: var(--bg); color: var(--ink);
+      font-family: var(--font); font-weight: 400;
       -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible, .c-track:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
     .wrap { max-width: 1240px; margin: 0 auto; padding: 0 44px; }
 
     /* Nav */
-    nav {
-      display: flex; justify-content: flex-end; align-items: center; gap: 22px;
-      padding-top: 18px; font-size: 18px; color: var(--muted); flex-wrap: wrap;
+    .site-nav {
+      display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px 28px;
+      padding-top: 18px; font-size: 18px; color: var(--muted);
     }
-    nav a:hover { color: var(--ink); }
-    nav .dot { font-size: 12px; color: var(--muted); }
+    .site-nav a:hover { color: var(--ink); }
 
     /* Hero */
-    .hero {
-      display: grid; grid-template-columns: 1fr 384px; gap: 48px;
-      align-items: start; padding: 22px 0 36px;
-      border-bottom: 1px solid var(--line);
-    }
-    /* Display style: every heading-like element. Everything else is text style. */
-    h1, .t-head h2, .card h3, .row strong, .fav h3, .t-role {
-      font-family: var(--f-display); font-weight: var(--w-display); letter-spacing: var(--ls-display);
-    }
-    .card h3, .row strong, .fav h3 { letter-spacing: normal; }
-    h1 {
-      font-size: clamp(56px, 9.5vw, 116px);
-      line-height: 0.95;
-    }
-    .subtitle {
-      margin-top: 18px; font-size: 27px; color: var(--muted); letter-spacing: -0.01em;
-    }
-    .intro { padding-top: 26px; font-size: 17px; line-height: 1.55; color: var(--body); }
-    .intro a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-strong); }
-    .intro a:hover { color: var(--ink); text-decoration-color: currentColor; }
-    .down { display: block; margin: 22px auto 0; width: 22px; color: var(--body); }
+    .hero { display: grid; grid-template-columns: 1fr 384px; gap: 48px; align-items: start; padding-top: 22px; }
+    h1, .t-head h2 { font-weight: 700; letter-spacing: normal; }
+    h1 { font-size: clamp(56px, 9.5vw, 116px); line-height: 0.95; }
+    .block { display: inline-block; width: .62em; height: .62em; margin-right: .18em; background: var(--red); }
+    .subtitle { margin-top: 18px; font-size: 27px; color: var(--muted); }
+    .intro { padding-top: 26px; font-size: 17px; line-height: 1.55; }
 
-    /* Selected work */
-    .label { margin: 18px 0 14px; font-size: 16px; color: var(--muted); letter-spacing: 0.01em; }
-    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .card {
-      border: 1px solid var(--line); padding: 18px 20px 16px;
-      display: flex; flex-direction: column; min-height: 144px;
-      transition: background .15s, border-color .15s;
+    /* Sections */
+    .sec { padding-top: 88px; }
+    .sec > h2 { font-size: 17px; font-weight: 600; margin-bottom: 16px; }
+    .d { color: var(--tone-text); }
+
+    /* Quiet list: years and names, no rules. The arrow shows on hover. */
+    .list { display: flex; flex-direction: column; }
+    .row {
+      display: grid; grid-template-columns: 8px 9.5em minmax(0, 1fr) 20px; gap: 0 18px; align-items: start;
+      padding: 7px 0; font-size: 16px; line-height: 1.5;
     }
-    .card:hover { background: var(--card-hover); border-color: var(--line-strong); }
-    .card h3 { font-size: 20px; }
-    .card p { margin-top: 10px; font-size: 15.5px; line-height: 1.5; color: var(--body); max-width: 260px; }
-    .card .arrow { margin-top: auto; flex: none; }
-    .card p { margin-bottom: 12px; }
+    .row::before { content: ""; width: 8px; height: 8px; margin-top: calc(.75em - 4px); background: var(--tone); }
+    .row .y { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .row strong { font-weight: 600; }
+    .row:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+    .row .arrow { align-self: center; visibility: hidden; }
+    .row:hover .arrow, .row:focus-visible .arrow { visibility: visible; }
+    @media (hover: none) { .row .arrow { visibility: visible; } }
 
     .arrow { width: 20px; height: 20px; transition: transform .15s; }
     a:hover .arrow { transform: translateX(3px); }
 
-    /* Timeline */
-    .timeline { margin: 18px 0 60px; border-top: 1px solid var(--line); }
-    .row {
-      display: grid; grid-template-columns: 185px 118px 1fr 24px; align-items: center;
-      padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15.5px; color: var(--body);
-    }
-    .row:hover { background: var(--card-hover); }
-    .row strong { color: var(--ink); font-size: 16px; }
-    .row .sep { margin: 0 6px; color: var(--muted); }
-
-    .projects { padding: 0 0 60px; }
-    .projects .label { margin-top: 0; }
-    .fav-h { font-size: 20px; margin-bottom: 16px; color: var(--ink); }
+    /* Favorites */
+    .fav { display: flex; flex-direction: column; gap: 48px; }
+    .fav h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+    .fav .note { margin-left: 10px; font-size: 15px; font-weight: 400; }
+    .fav a.note { text-decoration: underline; text-underline-offset: 3px; }
+    .bullets { list-style: none; font-size: 16px; line-height: 1.7; }
+    .bullets li { position: relative; padding-left: 18px; break-inside: avoid; }
+    .bullets li::before { content: ""; position: absolute; left: 0; top: calc(.85em - 3px); width: 6px; height: 6px; background: var(--tone); }
+    .bullets.cols { columns: 2; column-gap: 40px; }
+    .fav iframe { display: block; border: 0; border-radius: 12px; }
 
     /* Contact */
-    #contact { padding: 0 0 80px; font-size: 17px; color: var(--body); line-height: 1.6; }
-    #contact a { text-decoration: underline; text-underline-offset: 3px; }
+    #contact { padding-bottom: 96px; }
+    .contact { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 17px; line-height: 1.6; }
+    .contact a { text-decoration: underline; text-underline-offset: 3px; }
 
     /* Takeover */
     body.locked { overflow: hidden; }
     .takeover {
       position: fixed; inset: 0; z-index: 10; overflow-y: auto;
-      background: var(--bg); background-image: var(--pattern); visibility: hidden;
+      background: var(--bg); visibility: hidden;
       clip-path: inset(var(--t, 0) var(--r, 0) var(--b, 0) var(--l, 0));
     }
     .takeover.open { visibility: visible; }
@@ -124,232 +113,73 @@
     }
     .t-close svg { width: 18px; height: 18px; }
     .t-close:hover { color: var(--muted); }
-    .t-head {
-      display: grid; grid-template-columns: 1fr 384px; gap: 48px; align-items: end;
-      padding: 48px 0 36px; border-bottom: 1px solid var(--line);
-    }
-    .t-head h2 { font-size: clamp(44px, 7vw, 92px); line-height: 0.95; }
-    .t-role { margin-top: 16px; font-size: 24px; color: var(--muted); letter-spacing: normal; }
-    .t-summary { font-size: 17px; line-height: 1.55; color: var(--body); }
-    .t-hero { max-width: 1240px; margin: 0 auto; padding: 28px 44px 0; }
-    .t-carousel { padding-top: 28px; }
+    .t-head { padding-top: 48px; }
+    .t-head h2 { font-size: clamp(44px, 7vw, 92px); line-height: 0.98; }
+    .t-facts { margin-top: 16px; font-size: 18px; line-height: 1.5; color: var(--muted); }
+
+    /* Results up top */
+    .t-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px 40px; max-width: 1000px; padding-top: 40px; }
+    .res b { display: block; font-size: clamp(40px, 5vw, 64px); font-weight: 700; line-height: 1; color: var(--tone-text); }
+    .res span { display: block; margin-top: 10px; max-width: 22em; font-size: 16px; line-height: 1.45; }
+
+    .t-hero, .t-carousel, .t-video { padding-top: 40px; }
+    .t-hero img { display: block; width: 100%; height: 400px; object-fit: cover; border-radius: 8px; }
+    .t-video iframe { display: block; width: 100%; height: 400px; border: 0; border-radius: 8px; }
     .c-track {
-      margin: 0 auto;
       display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
-      border-radius: 8px; background: #000; scrollbar-width: none;
+      border-radius: 8px; background: var(--ink); scrollbar-width: none;
     }
     .c-track::-webkit-scrollbar { display: none; }
     .c-track img { flex: 0 0 100%; width: 100%; aspect-ratio: var(--ar, 2000 / 786); object-fit: cover; scroll-snap-align: start; display: block; }
-    .c-controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; }
-    .c-btn {
-      background: none; border: 1px solid var(--line-strong); color: var(--ink); cursor: pointer;
-      width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
-    }
-    .c-btn:hover { background: var(--card-hover); }
-    .c-btn .arrow { width: 16px; height: 16px; }
-    .c-btn .flip { transform: rotate(180deg); }
-    .c-dots { display: flex; gap: 8px; }
-    .c-dot { width: 8px; height: 8px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: var(--line-strong); opacity: .35; transition: opacity .2s, width .2s; }
-    .c-dot[aria-current="true"] { opacity: 1; width: 22px; border-radius: 4px; }
-    .t-video { max-width: 1240px; margin: 0 auto; padding: 28px 44px 0; }
-    .t-body { display: grid; grid-template-columns: 1fr 384px; gap: 48px; padding-top: 28px; }
-    .t-body ul { list-style: none; }
-    .t-body li {
-      position: relative; padding: 16px 0 16px 28px; border-bottom: 1px solid var(--line);
-      font-size: 18px; line-height: 1.5; color: var(--ink);
+    .c-controls { display: flex; align-items: baseline; gap: 24px; margin-top: 14px; font-size: 16px; }
+    .c-count { margin-right: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .c-btn { background: none; border: 0; padding: 4px 0; font: inherit; color: var(--ink); cursor: pointer; }
+    .c-btn:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Article */
+    .t-article { max-width: 760px; padding-top: 40px; display: flex; flex-direction: column; gap: 32px; }
+    .t-summary { font-size: 22px; line-height: 1.45; }
+    .t-bullets { list-style: none; display: flex; flex-direction: column; gap: 18px; }
+    .t-bullets li {
+      position: relative; padding-left: 26px; font-size: 18px; line-height: 1.55;
       opacity: 0; transform: translateY(10px); transition: opacity .35s, transform .45s cubic-bezier(.2, 0, .2, 1);
     }
-    .t-body li::before { content: ""; position: absolute; left: 4px; top: 27px; width: 8px; height: 1.5px; background: var(--ink); }
-    .takeover.shown .t-body li { opacity: 1; transform: none; }
-    .t-meta dt { font-size: 14px; color: var(--muted); margin-top: 16px; }
-    .t-meta dt:first-child { margin-top: 0; }
-    .t-meta dd { font-size: 16px; color: var(--ink); margin-top: 4px; }
-    .t-nav { display: flex; justify-content: space-between; margin-top: 48px; font-size: 16px; color: var(--muted); }
+    .t-bullets li::before { content: ""; position: absolute; left: 2px; top: calc(.775em - 4px); width: 8px; height: 8px; background: var(--tone); }
+    .takeover.shown .t-bullets li { opacity: 1; transform: none; }
+    .t-links h3 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+    .t-links ul { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 16px; }
+    .t-links a { text-decoration: underline; text-underline-offset: 3px; }
+
+    .t-nav { display: flex; justify-content: space-between; gap: 24px; margin-top: 72px; font-size: 16px; color: var(--muted); }
     .t-nav a { display: flex; align-items: center; gap: 10px; }
     .t-nav a:hover { color: var(--ink); }
     .t-nav .flip { transform: rotate(180deg); }
     .t-nav a.prev:hover .arrow { transform: rotate(180deg) translateX(3px); }
-    .t-draft { margin-top: 18px; font-size: 13px; color: var(--muted); }
-
-
-    /* ---------- Colorways ---------- */
-
-    /* Mondrian (default): primary blocks, heavy black grid lines. Inter Black + Inter. */
-    [data-theme="mondrian"] .hero { border-bottom-width: 6px; }
-    [data-theme="mondrian"] .card { border-width: 4px; position: relative; padding-top: 30px; }
-    [data-theme="mondrian"] .card::before {
-      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 14px;
-      border-bottom: 4px solid #111; background: var(--block);
-    }
-    [data-theme="mondrian"] .card:nth-child(1) { --block: var(--red); }
-    [data-theme="mondrian"] .card:nth-child(2) { --block: var(--blue); }
-    [data-theme="mondrian"] .card:nth-child(3) { --block: var(--yellow); }
-    [data-theme="mondrian"] .card:hover { background: var(--block); border-color: #111; }
-    [data-theme="mondrian"] .card:hover p { color: #111; }
-    [data-theme="mondrian"] .card:nth-child(-n+2):hover,
-    [data-theme="mondrian"] .card:nth-child(-n+2):hover p { color: #fff; }
-    [data-theme="mondrian"] .timeline { border-top-width: 4px; }
-    [data-theme="mondrian"] .row { border-bottom-width: 2px; }
-    [data-theme="mondrian"] .row:hover { background: var(--yellow); }
-    [data-theme="mondrian"] .t-top { border-bottom: 10px solid; border-image: linear-gradient(90deg, var(--red) 0 45%, #111 45% 46%, var(--yellow) 46% 70%, #111 70% 71%, var(--blue) 71%) 1; padding-bottom: 14px; }
-    [data-theme="mondrian"] .t-head { border-bottom-width: 4px; }
-    [data-theme="mondrian"] .t-body li { border-bottom-width: 2px; }
-    [data-theme="mondrian"] .t-body li::before { width: 10px; height: 10px; top: 23px; background: var(--red); }
-    [data-theme="mondrian"] .t-body li:nth-child(3n+2)::before { background: var(--blue); }
-    [data-theme="mondrian"] .t-body li:nth-child(3n)::before { background: var(--yellow); }
-
-    /* Queens (after Aimé Leon Dore): deep forest green, cream, gold.
-       Caslon serif (like the wordmark) + grotesque sans (like their Söhne). */
-    :root[data-theme="queens"] {
-      --bg: #1b3a2a; --ink: #f3ecdc; --body: #dcd3bf; --muted: #a9b5a0;
-      --line: #3f5c4a; --line-strong: #f3ecdc; --card-hover: #234a36;
-      --accent: #c9a24e;
-      --f-display: "Libre Caslon Display", Georgia, serif; --w-display: 400; --ls-display: -0.01em;
-      --f-text: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif; --w-text: 400;
-    }
-    [data-theme="queens"] .label, [data-theme="queens"] nav, [data-theme="queens"] .subtitle,
-    [data-theme="queens"] .row .k, [data-theme="queens"] .t-top, [data-theme="queens"] .t-meta dt {
-      text-transform: uppercase; letter-spacing: 0.16em; font-size: 12.5px;
-    }
-    [data-theme="queens"] .subtitle { font-size: 15px; color: var(--accent); margin-top: 22px; }
-    [data-theme="queens"] .card h3, [data-theme="queens"] .fav-h { font-size: 27px; }
-    [data-theme="queens"] .row strong { font-size: 21px; }
-    [data-theme="queens"] .card { border-color: var(--ink); outline: 1px solid var(--ink); outline-offset: -6px; padding: 22px 24px 18px; }
-    [data-theme="queens"] .card:hover { background: var(--ink); outline-color: var(--bg); }
-    [data-theme="queens"] .card:hover h3, [data-theme="queens"] .card:hover p, [data-theme="queens"] .card:hover .arrow { color: var(--bg); }
-    [data-theme="queens"] .intro a { text-decoration-color: var(--accent); }
-    [data-theme="queens"] .t-role { color: var(--accent); font-size: 28px; }
-    [data-theme="queens"] .t-body li::before { content: "\2766"; background: none; width: auto; height: auto; top: 15px; left: 0; color: var(--accent); font-size: 15px; }
-
-    /* Twombly: raw canvas, graphite, crimson scrawl. Caveat hand + Inter. */
-    :root[data-theme="twombly"] {
-      --bg: #ece6d9; --ink: #2a2826; --body: #4a4641; --muted: #8b8478;
-      --line: #cfc6b5; --line-strong: #8b8478; --card-hover: #e4dccb;
-      --accent: #b3303d;
-      --f-display: "Caveat", cursive; --w-display: 600; --ls-display: 0;
-    }
-    [data-theme="twombly"] h1 { font-size: clamp(64px, 11vw, 132px); line-height: 0.85; }
-    [data-theme="twombly"] .t-head h2 { font-size: clamp(54px, 8vw, 104px); }
-    [data-theme="twombly"] .card h3, [data-theme="twombly"] .fav-h { font-size: 28px; }
-    [data-theme="twombly"] .row strong { font-size: 22px; }
-    [data-theme="twombly"] .t-role { font-size: 32px; color: var(--accent); }
-    [data-theme="twombly"] .label { color: var(--accent); }
-    [data-theme="twombly"] .card { border-style: dashed; border-color: var(--line-strong); }
-    [data-theme="twombly"] .card:hover { background: radial-gradient(120% 90% at 15% 20%, rgba(217,141,145,.45), transparent 60%), var(--card-hover); }
-    [data-theme="twombly"] .card .arrow, [data-theme="twombly"] .row:hover .arrow { color: var(--accent); }
-    [data-theme="twombly"] .row:hover { background: linear-gradient(90deg, rgba(217,141,145,.28), transparent 70%); }
-    [data-theme="twombly"] .t-body li::before { background: var(--accent); height: 2px; transform: rotate(-12deg); }
-
-    /* Newman: one color field cut by vertical "zips". Anton + Archivo.
-       The field alternates between a muted cadmium red (Vir Heroicus Sublimis)
-       and ultramarine (Cathedra) each visit and each click of the swatch. */
-    :root[data-theme="newman"] {
-      --bg: #a3312b; --ink: #f8efe4; --body: #f1dcd2; --muted: #e2b8aa;
-      --line: rgba(248,239,228,.35); --line-strong: #f8efe4; --card-hover: #8a2722;
-      --accent: #f8efe4; --zip-dark: #5a1612;
-      --f-display: "Anton", Impact, sans-serif; --w-display: 400; --ls-display: 0.005em;
-      --f-text: "Archivo", "Helvetica Neue", Arial, sans-serif; --w-text: 400;
-      --pattern: linear-gradient(90deg,
-        transparent 0 20px, #f8efe4 20px 23px, transparent 23px calc(100% - 34px),
-        var(--zip-dark) calc(100% - 34px) calc(100% - 20px), transparent 0);
-    }
-    :root[data-theme="newman"][data-field="blue"] {
-      --bg: #23408e; --body: #dde3f2; --muted: #aebbe0; --card-hover: #1b3374; --zip-dark: #0f1f4f;
-    }
-    [data-theme="newman"] .hero { position: relative; }
-    [data-theme="newman"] .hero::after {
-      content: ""; position: absolute; top: -200px; bottom: 0; right: calc(384px + 22px);
-      width: 4px; background: #e3a84a; pointer-events: none;
-    }
-    [data-theme="newman"] h1, [data-theme="newman"] .t-head h2 { text-transform: uppercase; line-height: 0.92; }
-    [data-theme="newman"] h1 { font-size: clamp(64px, 11vw, 140px); }
-    [data-theme="newman"] .card h3, [data-theme="newman"] .fav-h { font-size: 24px; text-transform: uppercase; }
-    [data-theme="newman"] .row strong { font-size: 18px; text-transform: uppercase; }
-    [data-theme="newman"] .t-role { font-size: 26px; text-transform: uppercase; }
-    [data-theme="newman"] .card { background: var(--bg); }
-    [data-theme="newman"] .card:hover { background: var(--ink); }
-    [data-theme="newman"] .card:hover h3, [data-theme="newman"] .card:hover p, [data-theme="newman"] .card:hover .arrow { color: var(--bg); }
-    [data-theme="newman"] .row:hover { background: var(--card-hover); }
-    [data-theme="newman"] .t-body li::before { width: 3px; height: 22px; top: 18px; left: 6px; background: var(--ink); }
-
-    /* Decorative art, one per theme */
-    .art { display: none; }
-    .art svg { display: block; }
-    [data-theme="mondrian"] .art-mondrian, [data-theme="twombly"] .art-twombly { display: block; }
-    .art-mondrian { margin-top: 22px; width: 132px; }
-    .art-twombly { margin-top: -6px; width: min(420px, 90%); color: var(--accent); }
-    .art-twombly path { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: scrawl 2.4s .2s ease-out forwards; }
-    @keyframes scrawl { to { stroke-dashoffset: 0; } }
-
-    /* Theme switcher */
-    .swatches { display: flex; gap: 8px; margin-left: 6px; }
-    .swatch {
-      width: 18px; height: 18px; border-radius: 50%; cursor: pointer; padding: 0;
-      border: 1px solid var(--line-strong); background: var(--sw); outline-offset: 3px;
-      transition: transform .15s;
-    }
-    .swatch:hover { transform: scale(1.15); }
-    .swatch[aria-pressed="true"] { outline: 1.5px solid var(--ink); }
-    .swatch[data-set="mondrian"] { --sw: conic-gradient(#d42a20 0 25%, #f4c20d 0 50%, #fff 0 75%, #1d4f9f 0); border-radius: 2px; }
-    .swatch[data-set="queens"] { --sw: linear-gradient(135deg, #1b3a2a 55%, #c9a24e 55%); }
-    .swatch[data-set="twombly"] { --sw: radial-gradient(circle at 40% 40%, #b3303d 0 35%, #ece6d9 36%); }
-    .swatch[data-set="newman"] { --sw: linear-gradient(90deg, #a3312b 0 46%, #f8efe4 46% 54%, #23408e 54%); border-radius: 2px; }
-
-    body, .card, .row, .takeover { transition: background-color .4s, color .4s, border-color .4s; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .art-twombly path { animation: none; stroke-dashoffset: 0; }
-    }
 
     @media (prefers-reduced-motion: reduce) {
       .takeover.animating { transition: opacity .2s; }
-      .takeover .inner, .t-body li { transition: none; transform: none; }
+      .takeover .inner, .t-bullets li { transition: none; transform: none; }
     }
 
     @media (max-width: 900px) {
-      .takeover .inner { padding: 14px 16px 60px; }
-      .t-head, .t-body { grid-template-columns: 1fr; gap: 20px; }
-      .t-head { padding-top: 32px; }
-      .t-role { font-size: 19px; }
-      .t-body li { font-size: 16.5px; }
-      .t-hero { padding: 20px 16px 0; }
-      .t-hero img { height: 240px !important; }
-      .t-video { padding: 20px 16px 0; }
-      .t-video iframe { height: 240px !important; }
-    }
-
-    @media (max-width: 900px) {
-      :root[data-theme="newman"] {
-        --pattern: linear-gradient(90deg, transparent 0 5px, #f8efe4 5px 7px, transparent 7px calc(100% - 9px), var(--zip-dark) calc(100% - 9px) calc(100% - 3px), transparent 0);
-      }
-      [data-theme="newman"] .hero::after { display: none; }
       .wrap { padding: 0 16px; }
-      nav { font-size: 16px; gap: 14px; }
+      .site-nav { font-size: 16px; gap: 6px 18px; }
       .hero { grid-template-columns: 1fr; gap: 8px; }
       .subtitle { font-size: 21px; }
-      .down { display: none; }
-      .cards { grid-template-columns: 1fr; }
-      .row { grid-template-columns: 1fr 24px; gap: 2px 0; }
-      .row .k, .row .y { grid-column: 1; font-size: 13px; color: var(--muted); }
-      .row .k { display: none; }
-      .row .r { grid-column: 1; }
-      .row .arrow { grid-column: 2; grid-row: 1 / span 2; }
-      #favorites ul { columns: 1 !important; }
+      .sec { padding-top: 64px; }
+      .row { grid-template-columns: 8px minmax(0, 1fr) 20px; gap: 0 14px; }
+      .row .y { grid-column: 2; font-size: 14px; }
+      .row .r { grid-column: 2; }
+      .row .arrow { grid-column: 3; grid-row: 1 / span 2; }
+      .bullets.cols { columns: 1; }
+      .takeover .inner { padding: 14px 16px 60px; }
+      .t-head { padding-top: 32px; }
+      .t-facts { font-size: 16px; }
+      .t-summary { font-size: 19px; }
+      .t-bullets li { font-size: 16.5px; }
+      .t-hero img, .t-video iframe { height: 240px; }
     }
   </style>
-  <script>
-    (function () {
-      const themes = ['mondrian', 'queens', 'twombly', 'newman'];
-      let t = 'mondrian';
-      try { const saved = localStorage.getItem('colorway'); if (themes.includes(saved)) t = saved; } catch (e) {}
-      document.documentElement.dataset.theme = t;
-      // Newman alternates red/blue on every visit
-      let field = 'red';
-      try { field = localStorage.getItem('newmanField') === 'red' ? 'blue' : 'red'; } catch (e) {}
-      document.documentElement.dataset.field = field;
-      if (t === 'newman') try { localStorage.setItem('newmanField', field); } catch (e) {}
-    })();
-  </script>
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute">
@@ -359,162 +189,116 @@
   </svg>
 
   <div class="wrap">
-    <nav>
-      <a href="#work">Work</a><span class="dot">•</span>
-      <a href="#projects">Projects</a><span class="dot">•</span>
-      <a href="#favorites">Favorites</a><span class="dot">•</span>
-      <a href="https://github.com/dangutierrez/skills">Library</a><span class="dot">•</span>
+    <nav class="site-nav" aria-label="Site">
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#favorites">Favorites</a>
       <a href="#contact">Contact</a>
-      <div class="swatches" role="group" aria-label="Colorway">
-        <button class="swatch" data-set="mondrian" aria-label="Mondrian colorway" title="Mondrian"></button>
-        <button class="swatch" data-set="queens" aria-label="Queens colorway" title="Queens"></button>
-        <button class="swatch" data-set="twombly" aria-label="Twombly colorway" title="Twombly"></button>
-        <button class="swatch" data-set="newman" aria-label="Newman colorway" title="Newman"></button>
-      </div>
     </nav>
 
     <header class="hero">
       <div>
-        <h1>Dan Gutierrez</h1>
-        <p class="subtitle">Senior Product Manager · Austin</p>
-        <div class="art art-twombly" aria-hidden="true">
-          <svg viewBox="0 0 420 70" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-            <path d="M4 44c22-30 38-34 44-18s-18 30-10 34 34-46 52-44-6 40 6 42 36-50 58-46-10 42 4 44 40-52 60-46-8 40 8 42 38-48 58-42-6 36 10 38 34-40 50-36-4 30 8 30 30-30 44-28"/>
-          </svg>
-        </div>
+        <h1><span class="block" aria-hidden="true"></span>Dan Gutierrez</h1>
+        <p class="subtitle">Senior Product Manager in Austin</p>
       </div>
-      <div class="intro">
-        <p>Product leader with 12 years building 0→1 products across AI, fintech/POS, and B2B SaaS. Shipped Intellum's first three production Learner Agents (2.5x search conversion) and moved the product org from adoption metrics to impact measurement. At Clover, launched Kiosk ($5–10M first-year revenue, 25%+ above target) and contactless commerce products that processed $60M+ in payments.</p>
-        <a href="#work" aria-label="Scroll to work">
-          <div class="art art-mondrian" aria-hidden="true">
-            <svg viewBox="0 0 132 88">
-              <rect width="132" height="88" fill="#111"/>
-              <rect x="3" y="3" width="60" height="52" fill="#d42a20"/>
-              <rect x="67" y="3" width="62" height="24" fill="#f7f4ec"/>
-              <rect x="67" y="31" width="38" height="24" fill="#f7f4ec"/>
-              <rect x="109" y="31" width="20" height="54" fill="#f4c20d"/>
-              <rect x="3" y="59" width="26" height="26" fill="#f7f4ec"/>
-              <rect x="33" y="59" width="72" height="26" fill="#1d4f9f"/>
-            </svg>
-          </div>
-          <svg class="down" viewBox="0 0 20 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v20M3 15l7 7 7-7"/></svg>
-        </a>
-      </div>
+      <p class="intro">Product leader with 12 years building 0→1 products across AI, fintech/POS, and B2B SaaS. Shipped Intellum's first three production Learner Agents (2.5x search conversion) and moved the product org from adoption metrics to impact measurement. At Clover, launched Kiosk ($5–10M first-year revenue, 25%+ above target) and contactless commerce products that processed $60M+ in payments.</p>
     </header>
 
-    <main id="work">
-      <p class="label">Selected work</p>
-      <section class="cards">
-        <a class="card" href="#intellum-ai" data-open="intellum-ai">
-          <h3>Intellum AI agents</h3>
-          <p>Improved content discovery and learning outcomes.</p>
-          <svg class="arrow"><use href="#arrow"/></svg>
-        </a>
-        <a class="card" href="#clover-kiosk" data-open="clover-kiosk">
-          <h3>Clover Kiosk</h3>
-          <p>Increased in-store engagement and conversion.</p>
-          <svg class="arrow"><use href="#arrow"/></svg>
-        </a>
-        <a class="card" href="#sport-commerce" data-open="sport-commerce">
-          <h3>Contactless Commerce - Clover Sport</h3>
-          <p>Built scalable checkout experiences for fans and venues.</p>
-          <svg class="arrow"><use href="#arrow"/></svg>
-        </a>
+    <main>
+      <section id="work" class="sec" data-tone="red">
+        <h2>Selected work</h2>
+        <div class="list">
+          <a class="row" href="#intellum-ai" data-open="intellum-ai"><span class="y">2023–present</span><span class="r"><strong>Intellum AI agents</strong>, <span class="d">search conversion up 2.5x across 58K learners</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="row" href="#clover-kiosk" data-open="clover-kiosk"><span class="y">2022–2023</span><span class="r"><strong>Clover Kiosk</strong>, <span class="d">$5–10M first-year revenue, 25%+ above target</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="row" href="#sport-commerce" data-open="sport-commerce"><span class="y">2019–2022</span><span class="r"><strong>Clover Sport contactless</strong>, <span class="d">$60M+ in payments processed</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+        </div>
       </section>
 
-      <section class="timeline">
-        <a class="row" href="#intellum" data-open="intellum"><span class="k">Current</span><span class="y">2023–</span><span class="r"><strong>Intellum</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
-        <a class="row" href="#clover" data-open="clover"><span class="k">Past</span><span class="y">2022–2023</span><span class="r"><strong>Clover</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
-        <a class="row" href="#clover-sport" data-open="clover-sport"><span class="k">Past</span><span class="y">2019–2022</span><span class="r"><strong>Clover Sport</strong><span class="sep">·</span>Senior Product Manager</span><svg class="arrow"><use href="#arrow"/></svg></a>
-        <a class="row" href="#accenture" data-open="accenture"><span class="k">Past</span><span class="y">2014–2019</span><span class="r"><strong>Accenture</strong><span class="sep">·</span>Product Lead / PM</span><svg class="arrow"><use href="#arrow"/></svg></a>
-        <a class="row" href="#texas-am" data-open="texas-am"><span class="k">Education</span><span class="y">2013</span><span class="r"><strong>Texas A&amp;M</strong><span class="sep">·</span>B.S. Industrial Distribution</span><svg class="arrow"><use href="#arrow"/></svg></a>
+      <section id="experience" class="sec" data-tone="blue">
+        <h2>Experience</h2>
+        <div class="list">
+          <a class="row" href="#intellum" data-open="intellum"><span class="y">2023–present</span><span class="r"><strong>Intellum</strong>, <span class="d">Senior Product Manager</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="row" href="#clover" data-open="clover"><span class="y">2022–2023</span><span class="r"><strong>Clover</strong>, <span class="d">Senior Product Manager</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="row" href="#clover-sport" data-open="clover-sport"><span class="y">2019–2022</span><span class="r"><strong>Clover Sport</strong>, <span class="d">Senior Product Manager</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="row" href="#accenture" data-open="accenture"><span class="y">2014–2019</span><span class="r"><strong>Accenture</strong>, <span class="d">Product Lead / PM</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="row" href="#texas-am" data-open="texas-am"><span class="y">2013</span><span class="r"><strong>Texas A&amp;M</strong>, <span class="d">B.S. Industrial Distribution</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+        </div>
+      </section>
+
+      <section id="projects" class="sec" data-tone="yellow">
+        <h2>Personal projects</h2>
+        <div class="list">
+          <a class="row" href="#sky-builders" data-open="sky-builders"><span class="y">2026</span><span class="r"><strong>Sky Builders</strong>, <span class="d">a calm build-and-fly game that teaches early elementary kids addition through rockets</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="row" href="#pm-skills" data-open="pm-skills"><span class="y">2026</span><span class="r"><strong>PM skills for Claude</strong>, <span class="d">open-source Claude Code skills for design critiques, release notes, UX surveys, and meeting notes</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="row" href="#car-digest" data-open="car-digest"><span class="y">2026</span><span class="r"><strong>Daily car-deal routine</strong>, <span class="d">a scheduled Claude routine that scores used-car deals every morning</span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
+        </div>
+      </section>
+
+      <section id="favorites" class="sec" data-tone="red">
+        <h2>Favorites</h2>
+        <div class="fav">
+          <div>
+            <h3>Books</h3>
+            <ul class="bullets">
+              <li>Blood Meridian — <span class="d">Cormac McCarthy</span></li>
+              <li>Hitchhiker's Guide to the Galaxy — <span class="d">Douglas Adams</span></li>
+              <li>The Grey King — <span class="d">Susan Cooper</span></li>
+              <li>The Road — <span class="d">Cormac McCarthy</span></li>
+              <li>The Great Gatsby — <span class="d">F. Scott Fitzgerald</span></li>
+              <li>Of Mice and Men — <span class="d">John Steinbeck</span></li>
+              <li>The Old Man and the Sea — <span class="d">Ernest Hemingway</span></li>
+              <li>Tess of the d'Urbervilles — <span class="d">Thomas Hardy</span></li>
+              <li>American Colossus — <span class="d">H.W. Brands</span></li>
+              <li>Leonardo da Vinci — <span class="d">Walter Isaacson</span></li>
+              <li>Steve Jobs — <span class="d">Walter Isaacson</span></li>
+              <li>How to Change — <span class="d">Katy Milkman</span></li>
+              <li>Energy and Civilization — <span class="d">Vaclav Smil</span></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Movies <a class="note d" href="https://letterboxd.com/dan_e_gee/list/favorite-all-time/">View on Letterboxd</a></h3>
+            <ul class="bullets cols">
+              <li>28 Days Later</li>
+              <li>2001: A Space Odyssey</li>
+              <li>A.I. Artificial Intelligence</li>
+              <li>Aftersun</li>
+              <li>Billy Madison</li>
+              <li>Enter the Void</li>
+              <li>Fantastic Mr. Fox</li>
+              <li>Fight Club</li>
+              <li>Halloween</li>
+              <li>Hereditary</li>
+              <li>Inception</li>
+              <li>Inglourious Basterds</li>
+              <li>Interstellar</li>
+              <li>Kicking and Screaming</li>
+              <li>Life Is Beautiful</li>
+              <li>Minari</li>
+              <li>Old School</li>
+              <li>Oldboy</li>
+              <li>Requiem for a Dream</li>
+              <li>Step Brothers</li>
+              <li>The Departed</li>
+              <li>The Matrix</li>
+              <li>The Tree of Life</li>
+              <li>The Witch</li>
+              <li>There Will Be Blood</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Music <span class="note d">Track of the Week 2026</span></h3>
+            <iframe src="https://open.spotify.com/embed/playlist/3GfmnPVWLR9hiD0lcztP1B?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Track of the Week 2026 on Spotify"></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="sec" data-tone="blue">
+        <h2>Contact</h2>
+        <p class="contact d"><a href="mailto:daniel.gutierrez2013@gmail.com">daniel.gutierrez2013@gmail.com</a><a href="https://linkedin.com/in/Daniel-Gutierrez-2013">LinkedIn</a><a href="https://github.com/dangutierrez">GitHub</a></p>
       </section>
     </main>
-
-    <section id="projects" class="projects">
-      <p class="label">Personal projects</p>
-      <div class="cards">
-        <a class="card" href="#sky-builders" data-open="sky-builders">
-          <h3>Sky Builders</h3>
-          <p>A calm build-and-fly game that teaches early elementary kids addition through rockets.</p>
-          <svg class="arrow"><use href="#arrow"/></svg>
-        </a>
-        <a class="card" href="#pm-skills" data-open="pm-skills">
-          <h3>PM skills for Claude</h3>
-          <p>Open-source Claude Code skills for design critiques, release notes, UX surveys, and meeting notes.</p>
-          <svg class="arrow"><use href="#arrow"/></svg>
-        </a>
-        <a class="card" href="#car-digest" data-open="car-digest">
-          <h3>Daily car-deal routine</h3>
-          <p>A scheduled Claude routine that scores used-car deals every morning.</p>
-          <svg class="arrow"><use href="#arrow"/></svg>
-        </a>
-      </div>
-    </section>
-
-    <section id="favorites" class="fav" style="padding: 60px 0 80px; border-top: 1px solid var(--line);">
-      <p class="label">Favorites</p>
-
-      <div style="margin-bottom: 48px;">
-        <h3 class="fav-h">Books</h3>
-        <ul style="list-style: none; font-size: 16px; line-height: 1.7; color: var(--body);">
-          <li>Blood Meridian — Cormac McCarthy</li>
-          <li>Hitchhiker's Guide to the Galaxy — Douglas Adams</li>
-          <li>The Grey King — Susan Cooper</li>
-          <li>The Road — Cormac McCarthy</li>
-          <li>The Great Gatsby — F. Scott Fitzgerald</li>
-          <li>Of Mice and Men — John Steinbeck</li>
-          <li>The Old Man and the Sea — Ernest Hemingway</li>
-          <li>Tess of the d'Urbervilles — Thomas Hardy</li>
-          <li>American Colossus — H.W. Brands</li>
-          <li>Leonardo da Vinci — Walter Isaacson</li>
-          <li>Steve Jobs — Walter Isaacson</li>
-          <li>How to Change — Katy Milkman</li>
-          <li>Energy and Civilization — Vaclav Smil</li>
-        </ul>
-      </div>
-
-      <div style="margin-bottom: 48px;">
-        <h3 class="fav-h">Movies <span style="font-family: var(--f-text); font-weight: var(--w-text); font-size: 15px; color: var(--muted); text-transform: none; letter-spacing: normal;">· <a href="https://letterboxd.com/dan_e_gee/list/favorite-all-time/" style="text-decoration: underline;">View on Letterboxd</a></span></h3>
-        <ul style="list-style: none; font-size: 16px; line-height: 1.7; color: var(--body); columns: 2; column-gap: 40px;">
-          <li>28 Days Later</li>
-          <li>2001: A Space Odyssey</li>
-          <li>A.I. Artificial Intelligence</li>
-          <li>Aftersun</li>
-          <li>Billy Madison</li>
-          <li>Enter the Void</li>
-          <li>Fantastic Mr. Fox</li>
-          <li>Fight Club</li>
-          <li>Halloween</li>
-          <li>Hereditary</li>
-          <li>Inception</li>
-          <li>Inglourious Basterds</li>
-          <li>Interstellar</li>
-          <li>Kicking and Screaming</li>
-          <li>Life Is Beautiful</li>
-          <li>Minari</li>
-          <li>Old School</li>
-          <li>Oldboy</li>
-          <li>Requiem for a Dream</li>
-          <li>Step Brothers</li>
-          <li>The Departed</li>
-          <li>The Matrix</li>
-          <li>The Tree of Life</li>
-          <li>The Witch</li>
-          <li>There Will Be Blood</li>
-        </ul>
-      </div>
-
-      <div>
-        <h3 class="fav-h">Music <span style="font-family: var(--f-text); font-weight: var(--w-text); font-size: 15px; color: var(--muted); text-transform: none; letter-spacing: normal;">· Track of the Week 2026</span></h3>
-        <iframe style="border-radius: 12px; margin-top: 12px;" src="https://open.spotify.com/embed/playlist/3GfmnPVWLR9hiD0lcztP1B?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-      </div>
-    </section>
-
-    <section id="contact">
-      <p class="label">Contact</p>
-      <p><a href="mailto:daniel.gutierrez2013@gmail.com">daniel.gutierrez2013@gmail.com</a> · <a href="https://linkedin.com/in/Daniel-Gutierrez-2013">LinkedIn</a> · <a href="https://github.com/dangutierrez">GitHub</a></p>
-    </section>
   </div>
 
   <div class="takeover" id="takeover" role="dialog" aria-modal="true" aria-labelledby="t-title" aria-hidden="true">
@@ -525,49 +309,53 @@
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l12 12M16 4L4 16"/></svg>
         </button>
       </div>
-      <div class="t-hero" style="display: none;">
-        <img style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px;" alt="" />
-      </div>
-      <div class="t-carousel" hidden>
-        <div class="c-track" tabindex="0" aria-roledescription="carousel"></div>
-        <div class="c-controls">
-          <button class="c-btn c-prev" type="button" aria-label="Previous image"><svg class="arrow flip"><use href="#arrow"/></svg></button>
-          <div class="c-dots"></div>
-          <button class="c-btn c-next" type="button" aria-label="Next image"><svg class="arrow"><use href="#arrow"/></svg></button>
-        </div>
-      </div>
       <header class="t-head">
-        <div>
-          <h2 id="t-title"></h2>
-          <p class="t-role"></p>
-        </div>
-        <p class="t-summary"></p>
+        <h2 id="t-title"></h2>
+        <p class="t-facts"></p>
       </header>
-      <div class="t-video" style="display: none;">
-        <iframe style="width: 100%; height: 400px; border: 0; border-radius: 8px;" allowfullscreen></iframe>
+      <div class="t-results" hidden></div>
+      <div class="t-hero" hidden><img alt=""></div>
+      <div class="t-carousel" hidden>
+        <div class="c-track" tabindex="0" aria-roledescription="carousel" aria-label="Screenshots"></div>
+        <div class="c-controls">
+          <span class="c-count" aria-live="polite"></span>
+          <button class="c-btn c-prev" type="button" aria-label="Previous image">Previous</button>
+          <button class="c-btn c-next" type="button" aria-label="Next image">Next</button>
+        </div>
       </div>
-      <div class="t-body">
+      <div class="t-video" hidden><iframe title="Product demo video" allowfullscreen></iframe></div>
+      <div class="t-article">
+        <p class="t-summary"></p>
         <ul class="t-bullets"></ul>
-        <dl class="t-meta"></dl>
+        <div class="t-links" hidden>
+          <h3>Links</h3>
+          <ul></ul>
+        </div>
       </div>
       <nav class="t-nav" aria-label="Sections">
-        <a class="prev" href="#"><svg class="arrow flip"><use href="#arrow"/></svg><span></span></a>
-        <a class="next" href="#"><span></span><svg class="arrow"><use href="#arrow"/></svg></a>
+        <a class="prev" href="#"><svg class="arrow flip" aria-hidden="true"><use href="#arrow"/></svg><span></span></a>
+        <a class="next" href="#"><span></span><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
       </nav>
     </div>
   </div>
 
   <script>
-    // Resume content. Edit bullets here; order controls prev/next navigation.
+    // Resume content. Edit bullets here. Facts show as one line under the title;
+    // results are the headline figures shown above everything else.
     const SECTIONS = {
       'intellum-ai': {
-        title: 'Intellum AI agents', role: 'Intellum - Senior Product Manager',
+        title: 'Intellum AI agents',
+        facts: ['Senior Product Manager at Intellum', '2023–present', 'Generative AI, LLM agents, RAG'],
         summary: 'Shipped the first three production Learner Agents, achieving 2.5x search conversion lift.',
+        results: [
+          { value: '2.5x', label: 'learner search conversion, 6.75% to 16.67%' },
+          { value: '44%', label: 'higher course completion for adopters' },
+          { value: '216%', label: 'of the assessment agent\'s adoption target' }
+        ],
         images: [
           { src: 'images/intellum-learner-agent-1.webp', alt: 'Learner Agent: personal AI tutor with Ask anything search and course progress' },
           { src: 'images/intellum-learner-agent-2.webp', alt: 'Learner Agent: AI-graded assessment review suggesting activities to review' }
         ],
-        meta: { Years: '2023-', Focus: 'Generative AI, LLM agents, RAG' },
         links: [
           { title: 'AI Grading Open-Ended Questions', url: 'https://www.intellum.com/resources/blog/ai-grading-open-ended-questions' },
           { title: 'What\'s New in Intellum - Learner AI', url: 'https://www.intellum.com/resources/webinar/whats-new-how-intellum-is-transforming-learner-and-admin-experiences' },
@@ -581,10 +369,15 @@
         ]
       },
       'clover-kiosk': {
-        title: 'Clover Kiosk', role: 'Clover - Senior Product Manager',
+        title: 'Clover Kiosk',
+        facts: ['Senior Product Manager at Clover', '2022–2023', 'Hardware, payments, and POS'],
         summary: 'Launched self-serve kiosk generating $5-10M first-year revenue, 25%+ above target.',
+        results: [
+          { value: '$5–10M', label: 'first-year revenue, 25%+ above target' },
+          { value: '$16M', label: 'estimated value unlocked by new bar checkout' },
+          { value: '5–10%', label: 'rise in vertical SaaS penetration' }
+        ],
         image: 'images/clover-kiosk.jpg',
-        meta: { Years: '2022-2023', Focus: 'Hardware + payments + POS' },
         links: [
           { title: 'Clover Kiosk Product Page', url: 'https://clover.com/kiosk' },
           { title: 'Fiserv Press Release', url: 'https://investors.fiserv.com/node/49466/pdf' },
@@ -597,10 +390,15 @@
         ]
       },
       'sport-commerce': {
-        title: 'Contactless Commerce - Clover Sport', role: 'Clover Sport - Senior Product Manager',
+        title: 'Clover Sport contactless',
+        facts: ['Senior Product Manager at Clover Sport', '2019–2022', 'Stadium commerce, mobile ordering'],
         summary: 'Built contactless commerce suite that processed $60M+ in payments.',
+        results: [
+          { value: '$60M+', label: 'in payments through the Contactless Commerce suite' },
+          { value: '20%+', label: 'of supplemental ARR' },
+          { value: '$25M+', label: 'generated by the sports commerce platform' }
+        ],
         image: 'images/contactless-commerce.jpg',
-        meta: { Years: '2019-2022', Focus: 'Stadium commerce, mobile ordering' },
         video: 'https://players.brightcove.net/2474524878001/BJdEm9fkN_default/index.html?videoId=6306752109112',
         links: [
           { title: 'Product Demo Video', url: 'https://players.brightcove.net/2474524878001/BJdEm9fkN_default/index.html?videoId=6306752109112' },
@@ -616,7 +414,8 @@
         ]
       },
       'sky-builders': {
-        title: 'Sky Builders', role: 'Personal project · Learning game',
+        title: 'Sky Builders',
+        facts: ['Learning game, 2026', 'Built with Three.js and Claude Code', '4 levels playable', 'Demo available upon request'],
         summary: 'A calm build-and-fly game for early elementary kids: read a mission, build a rocket, check the math, then fly it.',
         images: [
           { src: 'images/projects/sky-builders-hangar.jpg', alt: 'Building the rocket: a path of build steps across the top, the rocket in the middle, engine choices in a dock, and a weight versus thrust check', ar: '16 / 10' },
@@ -626,7 +425,6 @@
           { src: 'images/projects/sky-builders-guess.jpg', alt: 'Will it fly? Blue thrust blocks push up and orange weight blocks pull down, with Yes and No in the same neutral style', ar: '16 / 10' },
           { src: 'images/projects/sky-builders-win-igloo.jpg', alt: 'Mission complete at the Igloo Iceberg in Level 4, on Frost cards over a polar night: four stars, one read-aloud button, and a one-row bonus question about why it flew', ar: '16 / 10' }
         ],
-        meta: { Year: '2026', Built: 'Three.js, Claude Code', Status: '4 levels playable', Demo: 'Available upon request' },
         bullets: [
           'Kids read a short mission, build a rocket step by step (cargo, body, nose, fins, engine), paint it, then fly it through rings.',
           'Turns physics into early elementary math. Before launch, an "engineer check" asks kids to add the parts and cargo weight, then compare weight to thrust.',
@@ -637,28 +435,28 @@
         ]
       },
       'pm-skills': {
-        title: 'PM skills for Claude', role: 'Personal project · Open source',
+        title: 'PM skills for Claude',
+        facts: ['Open source', 'Claude Code skills', 'Public on GitHub'],
         summary: 'Reusable Claude Code skills that encode how I do recurring product work, so the output is consistent every time.',
-        meta: { Format: 'Claude Code skills', License: 'Public on GitHub' },
         links: [
-          { title: 'dangutierrez/skills on GitHub', url: 'https://github.com/dangutierrez/skills' }
+          { title: 'The skills on GitHub', url: 'https://github.com/dangutierrez/skills' }
         ],
         bullets: [
           'Design critique: reviews any interface through three lenses (systems, material, and composition, after Katie Dill, Peter Tarka, and Zhenya Rynzhuk), with findings that are counted and ranked rather than vague. It then builds an interactive lab where the owner flips through layout and style options on real content, saves picks with notes, and gets a design system built from what they chose. I used it to redesign the menus and buttons in Sky Builders.',
           'Release notes: writes customer-facing notes from a ticket and its merged PR, ordered for a reader rather than a reviewer. Runs a caveat checklist (backfill, rollout latency, deferred scope) and an accuracy-trap list that catches notes that are true but misleading.',
           'UX survey: writes short post-launch surveys as Google Forms build sheets, and pushes back when a survey is the wrong research tool. Built on Nielsen Norman Group\'s question-writing rules, Judd Antin\'s research-value framing, and Bob Moesta\'s four forces.',
           'Meeting transcripts: saves Granola meetings to a local folder as dated plain-text files, skipping ones already saved, with a fallback to summary plus notes on the free plan.',
-          'Each skill is a single SKILL.md plus reference files loaded on demand. Install by symlinking into ~/.claude/skills/.'
+          'Each skill is one instruction file plus reference material that loads only when it\'s needed. Setup steps are on GitHub.'
         ]
       },
       'car-digest': {
-        title: 'Daily car-deal routine', role: 'Personal project · Claude routine',
+        title: 'Daily car-deal routine',
+        facts: ['Claude routine', 'Runs every morning at 7am', 'Built with Claude scheduled tasks and Python', 'Tracks 4 models across 4 Texas metros'],
         summary: 'A scheduled Claude routine that scans used-car listings every morning, scores the deals, and updates a page my family uses to build a shortlist.',
         images: [
           { src: 'images/projects/car-digest-summary.jpg', alt: 'Car hunt page: daily match counts, strong-deal alerts, and model filters', ar: '64 / 45' },
           { src: 'images/projects/car-digest-cards.jpg', alt: 'Scored listing cards with price, all-in estimate, history checks and a price trend', ar: '64 / 45' }
         ],
-        meta: { Runs: 'Every morning, 7am', Built: 'Claude scheduled tasks, Python', Tracks: '4 models, 4 Texas metros' },
         bullets: [
           'Every morning a Claude routine searches four models across Austin, San Antonio, Houston, Dallas-Fort Worth, and Carvana, then writes a digest of new listings, price drops, and sold cars.',
           'Scores each car 0–100: price against a fair-value model fit on current listings (age, miles, trim), CarGurus rating, time on the lot, and price cuts, blended 65/35 with a family-fit ranking.',
@@ -669,9 +467,14 @@
         ]
       },
       'intellum': {
-        title: 'Intellum', role: 'Senior Product Manager',
+        title: 'Intellum',
+        facts: ['Senior Product Manager', '2023–present'],
         summary: 'B2B SaaS learning platform for customer, partner, and employee education.',
-        meta: { Years: '2023-Present', Status: 'Current' },
+        results: [
+          { value: '2.5x', label: 'learner search conversion across 58K learners' },
+          { value: '44%', label: 'higher course completion for adopters' },
+          { value: '177%', label: 'of the social learning revenue target, $154K against $87K' }
+        ],
         bullets: [
           'Shipped the first three production Learner Agents (LLM search, course tutor, AI-graded assessment review). Search conversion rose 2.5x across 58K learners.',
           'Delivered a 44% lift in course completion by optimizing a critical learning workflow. Performed adopter-versus-non-adopter analysis in SQL/BigQuery across 12M enrollments.',
@@ -682,9 +485,14 @@
         ]
       },
       'clover': {
-        title: 'Clover', role: 'Senior Product Manager',
+        title: 'Clover',
+        facts: ['Senior Product Manager', '2022–2023', 'US, Canada, EMEA, LATAM'],
         summary: 'Point-of-sale and developer platform: $100M+ revenue, $100B+ GPV, 200K+ merchants.',
-        meta: { Years: '2022-2023', Status: 'Past', Scale: 'US, Canada, EMEA, LATAM' },
+        results: [
+          { value: '$5–10M', label: 'Clover Kiosk first-year revenue, 25%+ above target' },
+          { value: '$16M', label: 'estimated value unlocked by new bar checkout' },
+          { value: '5–10%', label: 'rise in vertical SaaS penetration' }
+        ],
         bullets: [
           'Launched Clover Kiosk, generating $5-10M first-year revenue, 25%+ above sales and adoption targets.',
           'Unlocked an estimated $16M by planning, designing, and launching new bar checkout capabilities across US, Canada, and UK.',
@@ -692,9 +500,14 @@
         ]
       },
       'clover-sport': {
-        title: 'Clover Sport', role: 'Senior Product Manager',
+        title: 'Clover Sport',
+        facts: ['Senior Product Manager', '2019–2022'],
         summary: 'Commerce platform for stadiums, venues, and live events (acquired by Clover/Fiserv 2020).',
-        meta: { Years: '2019-2022', Status: 'Past' },
+        results: [
+          { value: '$25M+', label: 'generated by the sports commerce platform' },
+          { value: '$60M+', label: 'in payments through the Contactless Commerce suite' },
+          { value: '20%+', label: 'of supplemental ARR' }
+        ],
         bullets: [
           'Owned the roadmap for a sports commerce platform generating $25M+ across enterprise, consumer, and API products.',
           'Launched the Contactless Commerce suite after COVID-19; it grew to 20%+ of supplemental ARR and processed $60M in payments.',
@@ -704,9 +517,14 @@
         ]
       },
       'accenture': {
-        title: 'Accenture', role: 'Product Lead / PM',
+        title: 'Accenture',
+        facts: ['Product Lead / PM', '2014–2019'],
         summary: 'Product management and delivery for enterprise networking and SMB products.',
-        meta: { Years: '2014-2019', Status: 'Past' },
+        results: [
+          { value: '$240M', label: 'total contract value of the client\'s largest customer' },
+          { value: '29%', label: 'more features prepared per sprint' },
+          { value: '10K+', label: 'customer locations onboarded' }
+        ],
         bullets: [
           'Managed, onboarded, and trained team of eight product owners as Product Lead for Enterprise Networking Product (2017-2019).',
           'Led team to deconstruct complex client requests into a well-defined roadmap, enabling the team to prepare 29% more features per sprint ($88K more billable software development).',
@@ -716,41 +534,27 @@
         ]
       },
       'texas-am': {
-        title: 'Texas A&M University', role: 'B.S. Industrial Distribution',
+        title: 'Texas A&M University',
+        facts: ['B.S. Industrial Distribution', '2013'],
         summary: 'College Station, Texas.',
-        meta: { Year: '2013' },
         bullets: [
           'B.S. Industrial Distribution, May 2013'
         ]
       }
     };
-    const ORDER = Object.keys(SECTIONS);
-
-    // Colorway switcher
-    const swatches = document.querySelectorAll('.swatch');
-    function setTheme(t) {
-      document.documentElement.dataset.theme = t;
-      swatches.forEach(b => b.setAttribute('aria-pressed', b.dataset.set === t));
-      try { localStorage.setItem('colorway', t); } catch (e) {}
-    }
-    swatches.forEach(b => b.addEventListener('click', () => {
-      const root = document.documentElement;
-      // clicking Newman while it's showing flips the field red <-> blue
-      if (b.dataset.set === 'newman' && root.dataset.theme === 'newman') {
-        root.dataset.field = root.dataset.field === 'red' ? 'blue' : 'red';
-        try { localStorage.setItem('newmanField', root.dataset.field); } catch (e) {}
-      }
-      setTheme(b.dataset.set);
-    }));
-    setTheme(document.documentElement.dataset.theme);
+    // Prev/next follows the order of the rows on the page.
+    const ORDER = [...document.querySelectorAll('.wrap [data-open]')].map(a => a.dataset.open);
 
     const el = document.getElementById('takeover');
     const q = s => el.querySelector(s);
-    const heroContainer = el.querySelector('.t-hero');
-    const videoContainer = el.querySelector('.t-video');
+    const heroContainer = q('.t-hero');
+    const videoContainer = q('.t-video');
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let origin = null;   // element the takeover grew from
     let current = null;
+
+    // A detail page takes the color of the home section its row sits in
+    const toneOf = id => document.querySelector(`.wrap [data-open="${id}"]`)?.closest('[data-tone]')?.dataset.tone || 'red';
 
     function clipTo(rect) {
       const w = innerWidth, h = innerHeight;
@@ -760,44 +564,39 @@
       el.style.setProperty('--l', rect ? rect.left + 'px' : '0px');
     }
 
-    // Image carousel: native scroll-snap (swipe on touch), arrows + dots
-    const carousel = el.querySelector('.t-carousel');
+    // Image carousel: native scroll-snap (swipe on touch), text buttons + a counter
+    const carousel = q('.t-carousel');
     const track = carousel.querySelector('.c-track');
-    const dots = carousel.querySelector('.c-dots');
+    const count = carousel.querySelector('.c-count');
     const slideTo = i => {
       const n = track.children.length;
       const to = cur = (i + n) % n;
       track.scrollTo({ left: to * track.clientWidth });
-      syncDots(to);   // don't wait for the smooth scroll to land
+      syncCount(to);   // don't wait for the smooth scroll to land
     };
     const slideIndex = () => Math.round(track.scrollLeft / track.clientWidth);
     let cur = 0;   // the slide we're on or heading to (scrollLeft lags during smooth scrolls)
     function renderCarousel(images) {
       carousel.hidden = !images;
-      track.innerHTML = ''; dots.innerHTML = '';
+      track.innerHTML = '';
       if (!images) return;
       const ar = images[0].ar || '2000 / 786';
       const [aw, ah] = ar.split('/').map(Number);
       track.style.setProperty('--ar', ar);
-      track.style.maxWidth = `min(100%, calc(62vh * ${aw / ah}))`;   // keep tall shots from pushing the title off screen
+      carousel.style.maxWidth = `min(100%, calc(62vh * ${aw / ah}))`;   // keep tall shots from pushing the article off screen
       images.forEach((im, i) => {
         const img = document.createElement('img');
         img.src = im.src; img.alt = im.alt; img.loading = i ? 'lazy' : 'eager';
         track.appendChild(img);
-        const dot = document.createElement('button');
-        dot.className = 'c-dot'; dot.type = 'button';
-        dot.setAttribute('aria-label', `Image ${i + 1} of ${images.length}`);
-        dot.addEventListener('click', () => slideTo(i));
-        dots.appendChild(dot);
       });
       track.scrollLeft = 0; cur = 0;
-      syncDots(0);
+      syncCount(0);
     }
-    function syncDots(target) {
+    function syncCount(target) {
       const i = Number.isInteger(target) ? target : slideIndex();
-      [...dots.children].forEach((d, j) => d.setAttribute('aria-current', i === j));
+      count.textContent = `${i + 1} of ${track.children.length}`;
     }
-    track.addEventListener('scrollend', () => { cur = slideIndex(); syncDots(cur); });   // after a swipe
+    track.addEventListener('scrollend', () => { cur = slideIndex(); syncCount(cur); });   // after a swipe
     carousel.querySelector('.c-prev').addEventListener('click', () => slideTo(cur - 1));
     carousel.querySelector('.c-next').addEventListener('click', () => slideTo(cur + 1));
     track.addEventListener('keydown', e => {   // arrows on the focused carousel move slides, not sections
@@ -810,25 +609,29 @@
     function render(id) {
       const d = SECTIONS[id];
       current = id;
+      el.dataset.tone = toneOf(id);
       q('#t-title').textContent = d.title;
-      q('.t-role').textContent = d.role;
+      q('.t-facts').textContent = d.facts.join(' · ');
       q('.t-summary').textContent = d.summary;
-      if (d.image) {
-        heroContainer.style.display = 'block';
-        heroContainer.querySelector('img').src = d.image;
-        heroContainer.querySelector('img').alt = d.title;
-      } else {
-        heroContainer.style.display = 'none';
-        heroContainer.querySelector('img').src = '';
-      }
+
+      const results = q('.t-results');
+      results.innerHTML = '';
+      results.hidden = !d.results;
+      (d.results || []).forEach(r => {
+        const div = document.createElement('div'); div.className = 'res';
+        const b = document.createElement('b'); b.textContent = r.value;
+        const span = document.createElement('span'); span.textContent = r.label;
+        div.append(b, span);
+        results.appendChild(div);
+      });
+
+      heroContainer.hidden = !d.image;
+      heroContainer.querySelector('img').src = d.image || '';
+      heroContainer.querySelector('img').alt = d.image ? d.title : '';
       renderCarousel(d.images);
-      if (d.video) {
-        videoContainer.style.display = 'block';
-        videoContainer.querySelector('iframe').src = d.video;
-      } else {
-        videoContainer.style.display = 'none';
-        videoContainer.querySelector('iframe').src = '';
-      }
+      videoContainer.hidden = !d.video;
+      videoContainer.querySelector('iframe').src = d.video || '';
+
       q('.t-bullets').innerHTML = '';
       d.bullets.forEach((b, i) => {
         const li = document.createElement('li');
@@ -836,33 +639,22 @@
         li.style.transitionDelay = (0.3 + i * 0.06) + 's';
         q('.t-bullets').appendChild(li);
       });
-      q('.t-meta').innerHTML = '';
-      Object.entries(d.meta).forEach(([k, v]) => {
-        const dt = document.createElement('dt'); dt.textContent = k;
-        const dd = document.createElement('dd'); dd.textContent = v;
-        q('.t-meta').append(dt, dd);
+
+      const links = q('.t-links');
+      const linkList = links.querySelector('ul');
+      linkList.innerHTML = '';
+      links.hidden = !d.links;
+      (d.links || []).forEach(link => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = link.url;
+        a.textContent = link.title;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        li.appendChild(a);
+        linkList.appendChild(li);
       });
-      if (d.links && d.links.length > 0) {
-        const linksLabel = document.createElement('dt');
-        linksLabel.textContent = 'Resources';
-        linksLabel.style.marginTop = '24px';
-        q('.t-meta').appendChild(linksLabel);
-        const linksContainer = document.createElement('dd');
-        linksContainer.style.display = 'flex';
-        linksContainer.style.flexDirection = 'column';
-        linksContainer.style.gap = '8px';
-        d.links.forEach(link => {
-          const a = document.createElement('a');
-          a.href = link.url;
-          a.textContent = link.title;
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          a.style.textDecoration = 'underline';
-          a.style.color = 'var(--ink)';
-          linksContainer.appendChild(a);
-        });
-        q('.t-meta').appendChild(linksContainer);
-      }
+
       const i = ORDER.indexOf(id);
       const prev = ORDER[(i - 1 + ORDER.length) % ORDER.length];
       const next = ORDER[(i + 1) % ORDER.length];
@@ -897,7 +689,7 @@
     function close(fromHistory = false) {
       if (!el.classList.contains('open')) return;
       el.classList.remove('shown');
-      // shrink back into the original card/row if we came from one on the page
+      // shrink back into the original row if we came from one on the page
       const target = document.querySelector(`.wrap [data-open="${current}"]`) || origin;
       if (!reduceMotion && target) clipTo(target.getBoundingClientRect());
       const done = () => {
