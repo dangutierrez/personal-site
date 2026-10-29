@@ -20,6 +20,7 @@
       --blue: #1d4f9f; --yellow: #f4c20d;
       --ochre: #866400;   /* yellow is too light to read as text, so yellow sections set text in ochre */
       --font: "Inter", "Helvetica Neue", Arial, sans-serif;
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);   /* fast start, long settle */
     }
     [data-tone="red"] { --tone: var(--red); --tone-text: var(--red); }
     [data-tone="blue"] { --tone: var(--blue); --tone-text: var(--blue); }
@@ -27,7 +28,7 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     [hidden] { display: none !important; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scrollbar-gutter: stable; }   /* page doesn't shift when the takeover locks scrolling */
     body {
       background: var(--bg); color: var(--ink);
       font-family: var(--font); font-weight: 400;
@@ -93,19 +94,23 @@
 
     /* Takeover */
     body.locked { overflow: hidden; }
+    /* The page and its content move as one piece: fade in and grow from the clicked
+       row (--oy), close faster back toward it. Only opacity and transform animate. */
     .takeover {
       position: fixed; inset: 0; z-index: 10; overflow-y: auto;
       background: var(--bg); visibility: hidden;
-      clip-path: inset(var(--t, 0) var(--r, 0) var(--b, 0) var(--l, 0));
+      opacity: 0; transform: scale(.96); transform-origin: 50% var(--oy, 50%);
+      transition: opacity .15s var(--ease-out), transform .2s var(--ease-out), visibility 0s .2s;
     }
-    .takeover.open { visibility: visible; }
-    .takeover.animating { transition: clip-path .55s cubic-bezier(.7, 0, .2, 1); }
+    .takeover.open {   /* a short fade keeps the two pages from overlapping for long; the scale settles slower */
+      visibility: visible; opacity: 1; transform: none;
+      transition: opacity .15s var(--ease-out), transform .35s var(--ease-out), visibility 0s;
+    }
     .takeover .inner {
       max-width: 1240px; margin: 0 auto; padding: 18px 44px 80px;
-      opacity: 0; transform: translateY(16px);
-      transition: opacity .3s ease, transform .4s cubic-bezier(.2, 0, .2, 1);
+      transition: opacity .15s var(--ease-out);
     }
-    .takeover.shown .inner { opacity: 1; transform: none; transition-delay: .25s; }
+    .takeover.switching .inner { opacity: 0; }   /* quick crossfade between pages */
     .t-top { display: flex; justify-content: space-between; align-items: center; font-size: 16px; color: var(--muted); }
     .t-close {
       background: none; border: 0; cursor: pointer; color: var(--ink);
@@ -140,12 +145,8 @@
     .t-article { max-width: 760px; padding-top: 40px; display: flex; flex-direction: column; gap: 32px; }
     .t-summary { font-size: 22px; line-height: 1.45; }
     .t-bullets { list-style: none; display: flex; flex-direction: column; gap: 18px; }
-    .t-bullets li {
-      position: relative; padding-left: 26px; font-size: 18px; line-height: 1.55;
-      opacity: 0; transform: translateY(10px); transition: opacity .35s, transform .45s cubic-bezier(.2, 0, .2, 1);
-    }
+    .t-bullets li { position: relative; padding-left: 26px; font-size: 18px; line-height: 1.55; }
     .t-bullets li::before { content: ""; position: absolute; left: 2px; top: calc(.775em - 4px); width: 8px; height: 8px; background: var(--tone); }
-    .takeover.shown .t-bullets li { opacity: 1; transform: none; }
     .t-links h3 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
     .t-links ul { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 16px; }
     .t-links a { text-decoration: underline; text-underline-offset: 3px; }
@@ -157,8 +158,8 @@
     .t-nav a.prev:hover .arrow { transform: rotate(180deg) translateX(3px); }
 
     @media (prefers-reduced-motion: reduce) {
-      .takeover.animating { transition: opacity .2s; }
-      .takeover .inner, .t-bullets li { transition: none; transform: none; }
+      .takeover { transform: none; transition: opacity .15s, visibility 0s .15s; }
+      .takeover.open { transition: opacity .15s, visibility 0s; }
     }
 
     @media (max-width: 900px) {
@@ -547,20 +548,27 @@
     const q = s => el.querySelector(s);
     const heroContainer = q('.t-hero');
     const videoContainer = q('.t-video');
-    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let origin = null;   // element the takeover grew from
     let current = null;
 
     // A detail page takes the color of the home section its row sits in
     const toneOf = id => document.querySelector(`.wrap [data-open="${id}"]`)?.closest('[data-tone]')?.dataset.tone || 'red';
 
-    function clipTo(rect) {
-      const w = innerWidth, h = innerHeight;
-      el.style.setProperty('--t', rect ? rect.top + 'px' : '0px');
-      el.style.setProperty('--r', rect ? (w - rect.right) + 'px' : '0px');
-      el.style.setProperty('--b', rect ? (h - rect.bottom) + 'px' : '0px');
-      el.style.setProperty('--l', rect ? rect.left + 'px' : '0px');
+    // Grow from, and shrink back toward, the row a page belongs to
+    function originAt(target) {
+      const r = target?.getBoundingClientRect();
+      el.style.setProperty('--oy', r ? `${r.top + r.height / 2}px` : '50%');
     }
+
+    // Start loading a page's first image when its row is hovered or focused, so it's ready when the page opens
+    const preloaded = new Set();
+    ['pointerover', 'focusin'].forEach(type => document.addEventListener(type, e => {
+      const id = e.target.closest('.wrap [data-open]')?.dataset.open;
+      if (!id || preloaded.has(id)) return;
+      preloaded.add(id);
+      const src = SECTIONS[id].image || SECTIONS[id].images?.[0].src;
+      if (src) new Image().src = src;
+    }));
 
     // Image carousel: native scroll-snap (swipe on touch), text buttons + a counter
     const carousel = q('.t-carousel');
@@ -631,10 +639,9 @@
       videoContainer.querySelector('iframe').src = d.video || '';
 
       q('.t-bullets').innerHTML = '';
-      d.bullets.forEach((b, i) => {
+      d.bullets.forEach(b => {
         const li = document.createElement('li');
         li.textContent = b;
-        li.style.transitionDelay = (0.3 + i * 0.06) + 's';
         q('.t-bullets').appendChild(li);
       });
 
@@ -664,40 +671,30 @@
     function open(id, from, push = true) {
       if (!SECTIONS[id]) return;
       if (el.classList.contains('open')) {   // switching sections inside the takeover
-        el.classList.remove('shown');
-        setTimeout(() => { render(id); el.classList.add('shown'); }, 200);
+        el.classList.add('switching');
+        setTimeout(() => { render(id); el.classList.remove('switching'); }, 150);
         if (push) history.pushState({ id }, '', '#' + id);
         return;
       }
-      origin = from || document.querySelector(`[data-open="${id}"]:not(.takeover *)`);
+      origin = from || document.querySelector(`.wrap [data-open="${id}"]`);
       render(id);
-      el.classList.remove('animating');
-      clipTo(reduceMotion || !origin ? null : origin.getBoundingClientRect());
+      originAt(origin);
       el.classList.add('open');
       el.setAttribute('aria-hidden', 'false');
       document.body.classList.add('locked');
-      el.offsetHeight;                     // commit the starting clip before animating
-      el.classList.add('animating');
-      clipTo(null);
-      el.classList.add('shown');
       q('.t-close').focus({ preventScroll: true });
       if (push) history.pushState({ id }, '', '#' + id);
     }
 
     function close(fromHistory = false) {
       if (!el.classList.contains('open')) return;
-      el.classList.remove('shown');
-      // shrink back into the original row if we came from one on the page
+      // shrink back toward the row of the page being closed
       const target = document.querySelector(`.wrap [data-open="${current}"]`) || origin;
-      if (!reduceMotion && target) clipTo(target.getBoundingClientRect());
-      const done = () => {
-        el.classList.remove('open', 'animating');
-        el.setAttribute('aria-hidden', 'true');
-        document.body.classList.remove('locked');
-        clipTo(null);
-        if (target) target.focus({ preventScroll: true });
-      };
-      setTimeout(done, reduceMotion ? 200 : 560);
+      originAt(target);
+      el.classList.remove('open', 'switching');
+      el.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('locked');
+      if (target) target.focus({ preventScroll: true });
       if (!fromHistory) history.replaceState(null, '', location.pathname + location.search);
     }
 
