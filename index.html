@@ -135,9 +135,11 @@
       border-radius: 8px; background: var(--ink); scrollbar-width: none;
     }
     .c-track::-webkit-scrollbar { display: none; }
-    .c-track img { flex: 0 0 100%; width: 100%; aspect-ratio: var(--ar, 2000 / 786); object-fit: cover; scroll-snap-align: start; display: block; }
-    .c-controls { display: flex; align-items: baseline; gap: 24px; margin-top: 14px; font-size: 16px; }
+    .c-track > img, .c-track > video { flex: 0 0 100%; width: 100%; aspect-ratio: var(--ar, 2000 / 786); object-fit: cover; scroll-snap-align: start; display: block; }
+    .c-controls { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; margin-top: 14px; font-size: 16px; }
     .c-count { margin-right: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .c-caption { flex: 1 1 0; min-width: 0; line-height: 1.45; }   /* takes the space between the counter and the buttons */
+    .c-caption:empty { display: none; }
     .c-btn { background: none; border: 0; padding: 4px 0; font: inherit; color: var(--ink); cursor: pointer; }
     .c-btn:hover { text-decoration: underline; text-underline-offset: 3px; }
 
@@ -176,6 +178,7 @@
       .takeover .inner { padding: 14px 16px 60px; }
       .t-head { padding-top: 32px; }
       .t-facts { font-size: 16px; }
+      .c-caption { order: -1; flex-basis: 100%; }
       .t-summary { font-size: 19px; }
       .t-bullets li { font-size: 16.5px; }
       .t-hero img, .t-video iframe { height: 240px; }
@@ -320,6 +323,7 @@
         <div class="c-track" tabindex="0" aria-roledescription="carousel" aria-label="Screenshots"></div>
         <div class="c-controls">
           <span class="c-count" aria-live="polite"></span>
+          <p class="c-caption"></p>
           <button class="c-btn c-prev" type="button" aria-label="Previous image">Previous</button>
           <button class="c-btn c-next" type="button" aria-label="Next image">Next</button>
         </div>
@@ -353,8 +357,18 @@
           { value: '216%', label: 'of the assessment agent\'s adoption target' }
         ],
         images: [
-          { src: 'images/intellum-learner-agent-1.webp', alt: 'Learner Agent: personal AI tutor with Ask anything search and course progress' },
-          { src: 'images/intellum-learner-agent-2.webp', alt: 'Learner Agent: AI-graded assessment review suggesting activities to review' }
+          { video: 'images/intellum/learner-agent-before-after.mp4', poster: 'images/intellum/learner-agent-before-after.webp', ar: '3 / 2',
+            alt: 'Screen recording: in the Before view, four people ask how to schedule a report across Slack, email, and a support ticket. In the Now view, Learner Agent answers from Lesson 4 of Reporting essentials.',
+            caption: 'Before, the same question became four messages and a support ticket. Now the agent answers from the course and links the lesson.' },
+          { src: 'images/intellum/learner-agent-course-page.webp',
+            alt: 'Learner Agent beside the Reporting essentials course page, answering how to send a report to a team every week and listing three source courses',
+            caption: 'In the product, the agent sits beside the course, answers in plain language, and cites the courses it drew from.' },
+          { video: 'images/intellum/learner-agent-quiz-review.mp4', poster: 'images/intellum/learner-agent-quiz-review.webp',
+            alt: 'Screen recording: Learner Agent explains why a learner missed quiz question four and links a lesson to review, then recommends Reporting essentials as the first course to take.',
+            caption: 'Assessment review explains a missed quiz question before the retake, and search suggests which course to take first.' },
+          { src: 'images/intellum/learner-agent-launch-page.webp',
+            alt: 'Intellum\'s Learner Agent launch page: “Who knows how to…?” Lesson 4 does.',
+            caption: 'The launch page: the answer to “Who knows how to…?” is already in a course.' }
         ],
         links: [
           { title: 'AI Grading Open-Ended Questions', url: 'https://www.intellum.com/resources/blog/ai-grading-open-ended-questions' },
@@ -566,14 +580,17 @@
       const id = e.target.closest('.wrap [data-open]')?.dataset.open;
       if (!id || preloaded.has(id)) return;
       preloaded.add(id);
-      const src = SECTIONS[id].image || SECTIONS[id].images?.[0].src;
+      const first = SECTIONS[id].images?.[0];
+      const src = SECTIONS[id].image || first?.poster || first?.src;
       if (src) new Image().src = src;
     }));
 
-    // Image carousel: native scroll-snap (swipe on touch), text buttons + a counter
+    // Media carousel: native scroll-snap (swipe on touch), text buttons, a counter and a caption per slide
     const carousel = q('.t-carousel');
     const track = carousel.querySelector('.c-track');
     const count = carousel.querySelector('.c-count');
+    const caption = carousel.querySelector('.c-caption');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const slideTo = i => {
       const n = track.children.length;
       const to = cur = (i + n) % n;
@@ -591,9 +608,18 @@
       track.style.setProperty('--ar', ar);
       carousel.style.maxWidth = `min(100%, calc(62vh * ${aw / ah}))`;   // keep tall shots from pushing the article off screen
       images.forEach((im, i) => {
-        const img = document.createElement('img');
-        img.src = im.src; img.alt = im.alt; img.loading = i ? 'lazy' : 'eager';
-        track.appendChild(img);
+        let slide;
+        if (im.video) {   // silent screen recordings that loop
+          slide = document.createElement('video');
+          Object.assign(slide, { src: im.video, poster: im.poster, muted: true, loop: true, playsInline: true, preload: i ? 'none' : 'auto', controls: reduceMotion });
+          slide.setAttribute('muted', '');
+          slide.setAttribute('aria-label', im.alt);
+        } else {
+          slide = document.createElement('img');
+          slide.src = im.src; slide.alt = im.alt; slide.loading = i ? 'lazy' : 'eager';
+        }
+        slide.dataset.caption = im.caption || '';
+        track.appendChild(slide);
       });
       track.scrollLeft = 0; cur = 0;
       syncCount(0);
@@ -601,6 +627,17 @@
     function syncCount(target) {
       const i = Number.isInteger(target) ? target : slideIndex();
       count.textContent = `${i + 1} of ${track.children.length}`;
+      caption.textContent = track.children[i]?.dataset.caption || '';
+      playOnly(i);
+    }
+    // Only the slide in view plays, from the start each time it comes into view.
+    // With reduced motion, videos wait for the viewer to press play.
+    function playOnly(i) {
+      [...track.querySelectorAll('video')].forEach(v => {
+        const inView = v === track.children[i] && el.classList.contains('open');
+        if (!inView) v.pause();
+        else if (v.paused && !reduceMotion) { v.currentTime = 0; v.play().catch(() => {}); }
+      });
     }
     track.addEventListener('scrollend', () => { cur = slideIndex(); syncCount(cur); });   // after a swipe
     carousel.querySelector('.c-prev').addEventListener('click', () => slideTo(cur - 1));
@@ -680,6 +717,7 @@
       render(id);
       originAt(origin);
       el.classList.add('open');
+      playOnly(cur);
       el.setAttribute('aria-hidden', 'false');
       document.body.classList.add('locked');
       q('.t-close').focus({ preventScroll: true });
@@ -692,6 +730,7 @@
       const target = document.querySelector(`.wrap [data-open="${current}"]`) || origin;
       originAt(target);
       el.classList.remove('open', 'switching');
+      playOnly(-1);
       el.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('locked');
       if (target) target.focus({ preventScroll: true });
