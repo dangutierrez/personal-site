@@ -135,7 +135,8 @@
       border-radius: 8px; background: var(--ink); scrollbar-width: none;
     }
     .c-track::-webkit-scrollbar { display: none; }
-    .c-track > img, .c-track > video { flex: 0 0 100%; width: 100%; aspect-ratio: var(--ar, 2000 / 786); object-fit: cover; scroll-snap-align: start; display: block; }
+    .c-track > img, .c-track > video, .c-track > iframe { flex: 0 0 100%; width: 100%; aspect-ratio: var(--ar, 2000 / 786); object-fit: cover; scroll-snap-align: start; display: block; }
+    .c-track > iframe { border: 0; }
     .c-controls { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; margin-top: 14px; font-size: 16px; }
     .c-count { margin-right: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
     .c-caption { flex: 1 1 0; min-width: 0; line-height: 1.45; }   /* takes the space between the counter and the buttons */
@@ -387,9 +388,11 @@
         results: [
           { value: '$5–10M', label: 'first-year revenue, 25%+ above target' }
         ],
-        video: 'https://www.youtube-nocookie.com/embed/zcsRAvOKa0o?rel=0',
         images: [
-          { src: 'images/clover-kiosk-guest.jpg', ar: '3 / 2',
+          { embed: 'https://www.youtube-nocookie.com/embed/zcsRAvOKa0o?rel=0&enablejsapi=1', ar: '3 / 2',
+            alt: 'Video: Clover Kiosk, a self-service kiosk for restaurants',
+            caption: 'Video: an overview of Clover Kiosk for restaurants, from Velocity Merchant Services.' },
+          { src: 'images/clover-kiosk-guest.jpg',
             alt: 'A guest taps a menu item on Clover Kiosk in a colorful restaurant, phone in hand, with the Clover payment device in the stand and a second kiosk behind him',
             caption: 'Guests order on the big screen and pay on the Clover device in the stand.' },
           { src: 'images/clover-kiosk-menu.jpg',
@@ -629,7 +632,10 @@
       carousel.style.maxWidth = `min(100%, calc(62vh * ${aw / ah}))`;   // keep tall shots from pushing the article off screen
       images.forEach((im, i) => {
         let slide;
-        if (im.video) {   // silent screen recordings that loop
+        if (im.embed) {   // a YouTube player; the viewer presses play
+          slide = document.createElement('iframe');
+          Object.assign(slide, { src: im.embed, title: im.alt, allowFullscreen: true, loading: i ? 'lazy' : 'eager' });
+        } else if (im.video) {   // silent screen recordings that loop
           slide = document.createElement('video');
           Object.assign(slide, { src: im.video, poster: im.poster, muted: true, loop: true, playsInline: true, preload: i ? 'none' : 'auto', controls: reduceMotion });
           slide.setAttribute('muted', '');
@@ -657,6 +663,11 @@
         const inView = v === track.children[i] && el.classList.contains('open');
         if (!inView) v.pause();
         else if (v.paused && !reduceMotion) { v.currentTime = 0; v.play().catch(() => {}); }
+      });
+      // A YouTube embed never autoplays; it pauses when it leaves view (needs enablejsapi=1 in its URL)
+      [...track.querySelectorAll('iframe')].forEach(f => {
+        if (f !== track.children[i] || !el.classList.contains('open'))
+          f.contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":[]}', new URL(f.src).origin);
       });
     }
     track.addEventListener('scrollend', () => { cur = slideIndex(); syncCount(cur); });   // after a swipe
@@ -751,6 +762,7 @@
       originAt(target);
       el.classList.remove('open', 'switching');
       playOnly(-1);
+      videoContainer.querySelector('iframe').src = '';   // a hidden player keeps playing; render() loads it again on open
       el.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('locked');
       if (target) target.focus({ preventScroll: true });
